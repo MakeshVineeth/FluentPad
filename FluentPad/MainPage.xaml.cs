@@ -333,5 +333,38 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             else
                 return "";
         }
+
+        private async void ReplaceBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(textBoxMain.Text)) return;
+            string from = await ShowAddDialogAsync("Enter text to replace for");
+
+            if (string.IsNullOrWhiteSpace(from)) return;
+            string to = await ShowAddDialogAsync("Enter text to replace with");
+
+            if (string.IsNullOrWhiteSpace(to)) return;
+
+            string text = textBoxMain.Text;
+            if (text.Contains(from))
+            {
+                text = text.Replace(from, to);
+                textBoxMain.Text = text;
+                var messageBox = new MessageDialog("Replaced!", "Success");
+                await messageBox.ShowAsync();
+                textBoxMain.Focus(FocusState.Programmatic);
+                textBoxMain.SelectionLength = 0;
+                textBoxMain.SelectionStart = 0;
+                int index = text.IndexOf(to);
+                textBoxMain.SelectionStart = index;
+                textBoxMain.SelectionLength = 0;
+            }
+            else
+            {
+                textBoxMain.SelectionLength = 0;
+                textBoxMain.SelectionStart = 0;
+                var messageBox = new MessageDialog("Not found any instances to replace with!", "Error");
+                await messageBox.ShowAsync();
+            }
+        }
     }
 }

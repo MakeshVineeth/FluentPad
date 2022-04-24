@@ -53,7 +53,7 @@
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem x:Name="SearchTextBtn" Text="Search" Click="SearchTextBtn_Click"/>
-                            <MenuFlyoutItem x:Name="ReplaceBtn" Text="Replace"/>
+                            <MenuFlyoutItem x:Name="ReplaceBtn" Text="Replace" Click="ReplaceBtn_Click"/>
                             <MenuFlyoutItem x:Name="SelectAllBtn" Text="Select All" Click="SelectAllBtn_Click"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
