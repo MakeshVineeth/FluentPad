@@ -9,7 +9,7 @@
 
     <Grid Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
+            <RowDefinition x:Name="topMenuBarRowDef" Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -28,7 +28,7 @@
             </CommandBarFlyout>
         </Grid.Resources>
 
-        <Grid Grid.Row="0" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+        <Grid x:Name="gridTopMenu" Grid.Row="0" Background="{StaticResource TopMenuColor}">
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="fileMenuBtn" Background="Transparent" Click="FileMenuButton_Click" Content="File" Padding="5" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Segoe UI" FontWeight="Bold">
                     <FlyoutBase.AttachedFlyout>
@@ -91,7 +91,7 @@
                  FontFamily="Segoe UI Variable Display" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                  AcceptsReturn="True" TextWrapping="Wrap"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10"
-                 ContextFlyout="{x:Bind ContextMenu}">
+                 ContextFlyout="{x:Bind ContextMenu}" KeyDown="TextBoxMain_KeyDown">
             <TextBox.Resources>
                 <SolidColorBrush x:Key="TextControlForeground" Color="White"/>
                 <SolidColorBrush x:Key="TextControlForegroundFocused" Color="White"/>

@@ -8,8 +8,11 @@ using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Media;
 
 namespace FluentPad
 {
@@ -47,15 +50,17 @@ namespace FluentPad
 
         private void DarkThemeToggle_Click(object sender, RoutedEventArgs e)
         {
+            var appView = ApplicationView.GetForCurrentView();
+            var titleBar = appView.TitleBar;
+
             if (darkThemeToggle.IsChecked)
             {
                 RequestedTheme = ElementTheme.Dark;
+                titleBar.BackgroundColor = ((SolidColorBrush)Resources["TopMenuColor"]).Color;
             }
             else
             {
                 RequestedTheme = ElementTheme.Light;
-                var appView = ApplicationView.GetForCurrentView();
-                var titleBar = appView.TitleBar;
                 titleBar.BackgroundColor = Colors.White;
             }
         }
@@ -365,6 +370,60 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
                 var messageBox = new MessageDialog("Not found any instances to replace with!", "Error");
                 await messageBox.ShowAsync();
             }
+        }
+
+        private void TextBoxMain_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            bool isCtrlPressed = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down);
+            if (e.Key == VirtualKey.Menu)
+            {
+                if (gridTopMenu.Visibility == Visibility.Visible)
+                {
+                    gridTopMenu.Visibility = Visibility.Collapsed;
+                    e.Handled = true;
+                }
+                else
+                {
+                    gridTopMenu.Visibility = Visibility.Visible;
+                    e.Handled = true;
+                }
+
+                // TODO Properties.Settings.Default.MenuVisibility = menuStrip1.Visible;
+                // Properties.Settings.Default.Save();
+            }
+            else if (isCtrlPressed && e.Key == VirtualKey.O)
+            {
+                OpenButton_Click(sender, e);
+            }
+            else if (isCtrlPressed && e.Key == VirtualKey.S)
+            {
+                SaveCurrentBtn_Click(sender, e);
+            }
+            else if (isCtrlPressed && e.Key == VirtualKey.F)
+            {
+                SearchTextBtn_Click(sender, e);
+            }
+            else if (isCtrlPressed && e.Key == VirtualKey.H)
+            {
+                ReplaceBtn_Click(sender, e);
+            }
+            else if (isCtrlPressed && e.Key == VirtualKey.G)
+            {
+                SearchGoogleBtn_Click(sender, e);
+            }
+            else if (isCtrlPressed && e.Key == VirtualKey.I)
+            {
+                InsertDateTimeBtn_Click(sender, e);
+            }
+            else if (isCtrlPressed && e.Key == VirtualKey.U)
+            {
+                UppercaseBtn_Click(sender, e);
+            }
+            else if (isCtrlPressed && e.Key == VirtualKey.L)
+            {
+                LowercaseBtn_Click(sender, e);
+            }
+
         }
     }
 }
