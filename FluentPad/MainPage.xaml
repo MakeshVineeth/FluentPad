@@ -16,14 +16,14 @@
         <Grid.Resources>
             <CommandBarFlyout x:Name="ContextMenu">
                 <CommandBarFlyout.SecondaryCommands>
-                    <AppBarButton Label="Cut" Icon="Cut"/>
-                    <AppBarButton Label="Copy" Icon="Copy"/>
-                    <AppBarButton Label="Paste" Icon="Paste"/>
-                    <AppBarButton Label="Delete" Icon="Delete"/>
-                    <AppBarButton Label="Search in Google" Icon="Find"/>
-                    <AppBarButton Label="Uppercase" Icon="FontIncrease"/>
-                    <AppBarButton Label="Lowercase" Icon="FontDecrease"/>
-                    <AppBarButton Label="Titlecase" Icon="Font"/>
+                    <AppBarButton x:Name="CutButton" Label="Cut" Icon="Cut" Click="CutButton_Click"/>
+                    <AppBarButton x:Name="CopyButton" Label="Copy" Icon="Copy" Click="CopyButton_Click"/>
+                    <AppBarButton x:Name="PasteButton" Label="Paste" Icon="Paste" Click="PasteButton_Click"/>
+                    <AppBarButton x:Name="DeleteButton" Label="Delete" Icon="Delete" Click="DeleteButton_Click"/>
+                    <AppBarButton x:Name="SearchGoogleBtn" Label="Search in Google" Icon="Find" Click="SearchGoogleBtn_Click"/>
+                    <AppBarButton x:Name="UppercaseBtn" Label="Uppercase" Icon="FontIncrease" Click="UppercaseBtn_Click"/>
+                    <AppBarButton x:Name="LowercaseBtn" Label="Lowercase" Icon="FontDecrease" Click="LowercaseBtn_Click"/>
+                    <AppBarButton x:Name="TitlecaseBtn" Label="Titlecase" Icon="Font" Click="TitlecaseBtn_Click"/>
                 </CommandBarFlyout.SecondaryCommands>
             </CommandBarFlyout>
         </Grid.Resources>
@@ -33,14 +33,14 @@
                 <Button x:Name="fileMenuBtn" Background="Transparent" Click="FileMenuButton_Click" Content="File" Padding="5" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Segoe UI" FontWeight="Bold">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem x:Name="newButton" Text="New"/>
+                            <MenuFlyoutItem x:Name="newButton" Text="New" Click="NewButton_Click"/>
                             <MenuFlyoutItem x:Name="openButton" Text="Open" Click="OpenButton_Click"/>
                             <MenuFlyoutSubItem x:Name="saveButton" Text="Save">
                                 <MenuFlyoutItem x:Name="saveCurrentBtn" Text="Save Current"/>
                                 <MenuFlyoutItem x:Name="saveNewBtn" Text="Save New"/>
                             </MenuFlyoutSubItem>
                             <ToggleMenuFlyoutItem x:Name="autoSaveToggle" Text="Auto Save"/>
-                            <MenuFlyoutItem x:Name="exitButton" Text="Exit"/>
+                            <MenuFlyoutItem x:Name="exitButton" Text="Exit" Click="ExitButton_Click"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>
