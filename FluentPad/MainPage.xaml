@@ -1,0 +1,104 @@
+﻿<Page
+    x:Class="FluentPad.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <CommandBarFlyout x:Name="ContextMenu">
+                <CommandBarFlyout.SecondaryCommands>
+                    <AppBarButton Label="Cut" Icon="Cut"/>
+                    <AppBarButton Label="Copy" Icon="Copy"/>
+                    <AppBarButton Label="Paste" Icon="Paste"/>
+                    <AppBarButton Label="Delete" Icon="Delete"/>
+                    <AppBarButton Label="Search in Google" Icon="Find"/>
+                    <AppBarButton Label="Uppercase" Icon="FontIncrease"/>
+                    <AppBarButton Label="Lowercase" Icon="FontDecrease"/>
+                    <AppBarButton Label="Titlecase" Icon="Font"/>
+                </CommandBarFlyout.SecondaryCommands>
+            </CommandBarFlyout>
+        </Grid.Resources>
+
+        <Grid Grid.Row="0" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="fileMenuBtn" Background="Transparent" Click="FileMenuButton_Click" Content="File" Padding="5" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Segoe UI" FontWeight="Bold">
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Name="newButton" Text="New"/>
+                            <MenuFlyoutItem x:Name="openButton" Text="Open"/>
+                            <MenuFlyoutSubItem x:Name="saveButton" Text="Save">
+                                <MenuFlyoutItem x:Name="saveCurrentBtn" Text="Save Current"/>
+                                <MenuFlyoutItem x:Name="saveNewBtn" Text="Save New"/>
+                            </MenuFlyoutSubItem>
+                            <ToggleMenuFlyoutItem x:Name="autoSaveToggle" Text="Auto Save"/>
+                            <MenuFlyoutItem x:Name="exitButton" Text="Exit"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
+                </Button>
+
+                <Button x:Name="operationsBtn" Click="OperationsBtn_Click" Content="Operations" VerticalAlignment="Center" 
+                        HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
+                        VerticalContentAlignment="Center" Background="Transparent" 
+                        FontFamily="Segoe UI" FontWeight="Bold">
+
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Search"/>
+                            <MenuFlyoutItem Text="Replace"/>
+                            <MenuFlyoutItem Text="Select All"/>
+                            <MenuFlyoutItem Text="Deselect All"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
+                </Button>
+
+                <Button x:Name="miscButton" Content="Miscellaneous" Click="MiscButton_Click"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center" FontFamily="Segoe UI"
+                        Background="Transparent" FontWeight="Bold">
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Insert Date/Time"/>
+                            <MenuFlyoutItem Text="Paste from Clipboard"/>
+                            <MenuFlyoutItem Text="Remove Extra Spaces"/>
+                            <ToggleMenuFlyoutItem x:Name="darkThemeToggle" Text="Dark Theme" Click="DarkThemeToggle_Click"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
+                </Button>
+
+                <Button x:Name="helpButton" Content="Help" Click="HelpButton_Click"
+                        VerticalAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Center" FontFamily="Segoe UI"
+                        Background="Transparent" FontWeight="Bold">
+                    <FlyoutBase.AttachedFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Shortcuts"/>
+                            <MenuFlyoutItem Text="About"/>
+                        </MenuFlyout>
+                    </FlyoutBase.AttachedFlyout>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <TextBox Grid.Row="1" BorderThickness="0" Background="Transparent" FontSize="22"
+                 FontFamily="Segoe UI Variable Display" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                 AcceptsReturn="True" TextWrapping="Wrap"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10"
+                 ContextFlyout="{x:Bind ContextMenu}">
+            <TextBox.Resources>
+                <SolidColorBrush x:Key="TextControlForeground" Color="White"/>
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="White"/>
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>
+            </TextBox.Resources>
+        </TextBox>
+    </Grid>
+</Page>
