@@ -34,7 +34,7 @@
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem x:Name="newButton" Text="New"/>
-                            <MenuFlyoutItem x:Name="openButton" Text="Open"/>
+                            <MenuFlyoutItem x:Name="openButton" Text="Open" Click="OpenButton_Click"/>
                             <MenuFlyoutSubItem x:Name="saveButton" Text="Save">
                                 <MenuFlyoutItem x:Name="saveCurrentBtn" Text="Save Current"/>
                                 <MenuFlyoutItem x:Name="saveNewBtn" Text="Save New"/>
@@ -88,7 +88,7 @@
             </StackPanel>
         </Grid>
 
-        <TextBox Grid.Row="1" BorderThickness="0" Background="Transparent" FontSize="22"
+        <TextBox x:Name="textBoxMain" Grid.Row="1" BorderThickness="0" Background="Transparent" FontSize="22"
                  FontFamily="Segoe UI Variable Display" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                  AcceptsReturn="True" TextWrapping="Wrap"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10"
