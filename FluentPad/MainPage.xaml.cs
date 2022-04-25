@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Net;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -12,7 +11,8 @@ using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Core;
-using Windows.UI.Xaml.Media;
+using System.IO;
+using Windows.UI.Xaml.Navigation;
 
 namespace FluentPad
 {
@@ -25,7 +25,48 @@ namespace FluentPad
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            try
+            {
+                if (e.Parameter is Windows.ApplicationModel.Activation.IActivatedEventArgs args)
+                {
+                    if (args.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
+                    {
+                        var fileArgs = args as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
+                        var file = (StorageFile)fileArgs.Files[0];
+                        string strFilePath = file.Path;
+
+                        if (!string.IsNullOrWhiteSpace(strFilePath))
+                        {
+                            openedFile = file;
+                            var appView = ApplicationView.GetForCurrentView();
+                            appView.Title = Path.GetFileName(strFilePath);
+                            LoadTextFromFile();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var msgBox = new MessageDialog("Error: " + ex.Message, "ERROR");
+                _ = msgBox.ShowAsync();
+            }
+        }
+
+        private async void LoadTextFromFile()
+        {
+            string text = await Windows.Storage.FileIO.ReadTextAsync(openedFile);
+
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                lastSavedText = text;
+                textBoxMain.Text = text;
+                FixAutoSelect();
+            }
         }
 
         private void FileMenuButton_Click(object sender, RoutedEventArgs e)
@@ -46,31 +87,6 @@ namespace FluentPad
         private void HelpButton_Click(object sender, RoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-        }
-
-        private async void DarkThemeToggle_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var appView = ApplicationView.GetForCurrentView();
-                var titleBar = appView.TitleBar;
-
-                if (darkThemeToggle.IsChecked)
-                {
-                    RequestedTheme = ElementTheme.Dark;
-                    titleBar.BackgroundColor = ((AcrylicBrush)Resources["SystemControlAcrylicWindowBrush"]).TintColor;
-                }
-                else
-                {
-                    RequestedTheme = ElementTheme.Light;
-                    titleBar.BackgroundColor = ((AcrylicBrush)Resources["SystemControlAcrylicWindowBrush"]).TintColor;
-                }
-            }
-            catch (Exception ex)
-            {
-                var msgBox = new MessageDialog("Error has occurred: " + ex.Message, "ERROR");
-                await msgBox.ShowAsync();
-            }
         }
 
         private async void OpenButton_Click(object sender, RoutedEventArgs e)
@@ -168,7 +184,7 @@ namespace FluentPad
                 string google = "https://www.google.com/search?q=";
                 string url = google + WebUtility.UrlEncode(text);
                 var urlObject = new Uri(url);
-                bool success = await Windows.System.Launcher.LaunchUriAsync(urlObject);
+                bool success = await Launcher.LaunchUriAsync(urlObject);
 
                 if (!success)
                 {
@@ -332,7 +348,7 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
         public static async Task<string> ShowAddDialogAsync(string title)
         {
             var inputTextBox = new TextBox { AcceptsReturn = false };
-            (inputTextBox as FrameworkElement).VerticalAlignment = VerticalAlignment.Bottom;
+            inputTextBox.VerticalAlignment = VerticalAlignment.Bottom;
             var dialog = new ContentDialog
             {
                 Content = inputTextBox,
@@ -431,6 +447,10 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             {
                 LowercaseBtn_Click(sender, e);
             }
+        }
+
+        private void MainPage1_Loaded(object sender, RoutedEventArgs e)
+        {
 
         }
     }

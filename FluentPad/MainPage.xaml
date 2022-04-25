@@ -5,11 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    RequestedTheme="Dark"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="MainPage1_Loaded">
 
     <Grid Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition x:Name="topMenuBarRowDef" Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -68,7 +69,6 @@
                             <MenuFlyoutItem x:Name="InsertDateTimeBtn" Text="Insert Date/Time" Click="InsertDateTimeBtn_Click"/>
                             <MenuFlyoutItem x:Name="PasteClipboardBtn" Text="Paste from Clipboard" Click="PasteClipboardBtn_Click"/>
                             <MenuFlyoutItem x:Name="TrimSpaceBtn" Text="Remove Extra Spaces" Click="TrimSpaceBtn_Click"/>
-                            <ToggleMenuFlyoutItem x:Name="darkThemeToggle" Text="Dark Theme" Click="DarkThemeToggle_Click"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>
@@ -87,7 +87,7 @@
             </StackPanel>
         </Grid>
 
-        <TextBox x:Name="textBoxMain" Grid.Row="1" BorderThickness="0" Background="{ThemeResource SystemControlBaseLowAcrylicWindowBrush}" FontSize="22"
+        <TextBox x:Name="textBoxMain" Grid.Row="1" BorderThickness="0" Background="Transparent" FontSize="22"
                  FontFamily="Segoe UI Variable Display" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                  AcceptsReturn="True" TextWrapping="Wrap"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10"
