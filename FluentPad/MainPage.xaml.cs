@@ -48,20 +48,28 @@ namespace FluentPad
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
-        private void DarkThemeToggle_Click(object sender, RoutedEventArgs e)
+        private async void DarkThemeToggle_Click(object sender, RoutedEventArgs e)
         {
-            var appView = ApplicationView.GetForCurrentView();
-            var titleBar = appView.TitleBar;
+            try
+            {
+                var appView = ApplicationView.GetForCurrentView();
+                var titleBar = appView.TitleBar;
 
-            if (darkThemeToggle.IsChecked)
-            {
-                RequestedTheme = ElementTheme.Dark;
-                titleBar.BackgroundColor = ((SolidColorBrush)Resources["TopMenuColor"]).Color;
+                if (darkThemeToggle.IsChecked)
+                {
+                    RequestedTheme = ElementTheme.Dark;
+                    titleBar.BackgroundColor = ((AcrylicBrush)Resources["SystemControlAcrylicWindowBrush"]).TintColor;
+                }
+                else
+                {
+                    RequestedTheme = ElementTheme.Light;
+                    titleBar.BackgroundColor = ((AcrylicBrush)Resources["SystemControlAcrylicWindowBrush"]).TintColor;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                RequestedTheme = ElementTheme.Light;
-                titleBar.BackgroundColor = Colors.White;
+                var msgBox = new MessageDialog("Error has occurred: " + ex.Message, "ERROR");
+                await msgBox.ShowAsync();
             }
         }
 
@@ -388,8 +396,8 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
                     e.Handled = true;
                 }
 
-                // TODO Properties.Settings.Default.MenuVisibility = menuStrip1.Visible;
-                // Properties.Settings.Default.Save();
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                localSettings.Values["menuVisibility"] = "Visible";
             }
             else if (isCtrlPressed && e.Key == VirtualKey.O)
             {

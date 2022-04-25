@@ -2,10 +2,4 @@
     x:Class="FluentPad.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <Application.Resources>
-        <SolidColorBrush x:Key="TopMenuColor" Color="{ThemeResource SystemControlAcrylicWindowBrush}"/>
-    </Application.Resources>
-
-
 </Application>
