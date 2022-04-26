@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Core;
 using System.IO;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
 
 namespace FluentPad
 {
@@ -26,6 +28,23 @@ namespace FluentPad
         public MainPage()
         {
             InitializeComponent();
+            TextBoxMain_GotFocus(null, null);
+            textBoxMain.GotFocus += TextBoxMain_GotFocus;
+            textBoxMain.PointerEntered += TextBoxMain_GotFocus;
+        }
+
+        private void TextBoxMain_GotFocus(object sender, RoutedEventArgs e)
+        {
+            AcrylicBrush textBoxAcrylic = (AcrylicBrush)Application.Current.Resources["SystemControlBaseMediumLowAcrylicWindowMediumBrush"];
+            
+            Color color = textBoxAcrylic.TintColor;
+            textBoxMain.Background = new SolidColorBrush(color);
+
+            SolidColorBrush textBoxFocused = (SolidColorBrush)Application.Current.Resources["TextControlBackgroundFocused"];
+            textBoxFocused.Color = color;
+
+            SolidColorBrush textBoxPointerOver = (SolidColorBrush)Application.Current.Resources["TextControlBackgroundPointerOver"];
+            textBoxPointerOver.Color = color;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -59,7 +78,7 @@ namespace FluentPad
 
         private async void LoadTextFromFile()
         {
-            string text = await Windows.Storage.FileIO.ReadTextAsync(openedFile);
+            string text = await FileIO.ReadTextAsync(openedFile);
 
             if (!string.IsNullOrWhiteSpace(text))
             {

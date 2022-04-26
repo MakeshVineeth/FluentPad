@@ -6,9 +6,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     RequestedTheme="Dark"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="MainPage1_Loaded">
+    Loaded="MainPage1_Loaded">
 
-    <Grid Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -31,7 +31,7 @@
 
         <Grid x:Name="gridTopMenu" Grid.Row="0" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="fileMenuBtn" Background="Transparent" Click="FileMenuButton_Click" Content="File" Padding="5" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Segoe UI" FontWeight="Bold">
+                <Button x:Name="fileMenuBtn" Background="Transparent" Click="FileMenuButton_Click" Content="File" Padding="5" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Segoe UI">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem x:Name="newButton" Text="New" Click="NewButton_Click"/>
@@ -49,7 +49,7 @@
                 <Button x:Name="operationsBtn" Click="OperationsBtn_Click" Content="Operations" VerticalAlignment="Center" 
                         HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
                         VerticalContentAlignment="Center" Background="Transparent" 
-                        FontFamily="Segoe UI" FontWeight="Bold">
+                        FontFamily="Segoe UI">
 
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
@@ -63,7 +63,7 @@
                 <Button x:Name="miscButton" Content="Miscellaneous" Click="MiscButton_Click"
                         VerticalAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center" FontFamily="Segoe UI"
-                        Background="Transparent" FontWeight="Bold">
+                        Background="Transparent">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem x:Name="InsertDateTimeBtn" Text="Insert Date/Time" Click="InsertDateTimeBtn_Click"/>
@@ -76,7 +76,7 @@
                 <Button x:Name="helpButton" Content="Help" Click="HelpButton_Click"
                         VerticalAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center" FontFamily="Segoe UI"
-                        Background="Transparent" FontWeight="Bold">
+                        Background="Transparent">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem x:Name="ShorcutsMenuBtn" Text="Shortcuts" Click="ShorcutsMenuBtn_Click"/>
@@ -87,7 +87,8 @@
             </StackPanel>
         </Grid>
 
-        <TextBox x:Name="textBoxMain" Grid.Row="1" BorderThickness="0" Background="Transparent" FontSize="22"
+        <TextBox x:Name="textBoxMain" Grid.Row="1" BorderThickness="0" 
+                 FontSize="22"
                  FontFamily="Segoe UI Variable Display" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                  AcceptsReturn="True" TextWrapping="Wrap"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10"
@@ -95,8 +96,6 @@
             <TextBox.Resources>
                 <SolidColorBrush x:Key="TextControlForeground" Color="White"/>
                 <SolidColorBrush x:Key="TextControlForegroundFocused" Color="White"/>
-                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
-                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>
             </TextBox.Resources>
         </TextBox>
     </Grid>
