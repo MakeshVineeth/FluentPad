@@ -99,6 +99,7 @@
             <TextBox.Resources>
                 <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
                 <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent"/>
             </TextBox.Resources>
         </TextBox>
     </Grid>
