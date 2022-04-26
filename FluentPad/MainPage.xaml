@@ -7,7 +7,6 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     RequestedTheme="Dark"
-    Loaded="MainPage1_Loaded"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True">
 
     <Grid>
@@ -42,7 +41,7 @@
                                 <MenuFlyoutItem x:Name="saveCurrentBtn" Text="Save Current" Click="SaveCurrentBtn_Click"/>
                                 <MenuFlyoutItem x:Name="saveNewBtn" Text="Save New" Click="SaveNewBtn_Click"/>
                             </MenuFlyoutSubItem>
-                            <ToggleMenuFlyoutItem x:Name="autoSaveToggle" Text="Auto Save"/>
+                            <ToggleMenuFlyoutItem x:Name="autoSaveToggle" Text="Auto Save" Click="AutoSaveToggle_Click"/>
                             <MenuFlyoutItem x:Name="exitButton" Text="Exit" Click="ExitButton_Click"/>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
@@ -95,7 +94,7 @@
                  AcceptsReturn="True" TextWrapping="Wrap"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10"
                  ContextFlyout="{x:Bind ContextMenu}" KeyDown="TextBoxMain_KeyDown"
-                 Background="Transparent">
+                 Background="Transparent" TextChanged="TextBoxMain_TextChanged">
             <TextBox.Resources>
                 <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
                 <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>

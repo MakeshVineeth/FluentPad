@@ -21,13 +21,48 @@ namespace FluentPad
     public sealed partial class MainPage : Page
     {
         StorageFile openedFile = null;
-        string previousSearched = string.Empty;
         string lastSavedText = string.Empty;
         const string pattern = " *";
+        readonly DispatcherTimer timer;
 
         public MainPage()
         {
             InitializeComponent();
+            timer = new DispatcherTimer();
+            timer.Tick += Timer_Tick;
+            timer.Interval = new TimeSpan(0, 0, 3);
+
+            ApplicationDataContainer dataContainer = ApplicationData.Current.LocalSettings;
+            string showMenu = dataContainer.Values["menuVisibility"]?.ToString() ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(showMenu) && showMenu.Contains("Visible"))
+            {
+                gridTopMenu.Visibility = Visibility.Visible;
+            }
+            else if (!string.IsNullOrWhiteSpace(showMenu) && showMenu.Contains("Hidden"))
+            {
+                gridTopMenu.Visibility = Visibility.Collapsed;
+            }
+
+            string autoSaveCheck = dataContainer.Values["AutoSaveEnabled"]?.ToString() ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(autoSaveCheck))
+            {
+                if (autoSaveCheck.Contains("True"))
+                {
+                    autoSaveToggle.IsChecked = true;
+                    timer.Start();
+                }
+                else if (autoSaveCheck.Contains("False"))
+                {
+                    autoSaveToggle.IsChecked = false;
+                }
+            }
+        }
+
+        private void Timer_Tick(object sender, object e)
+        {
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            if (autoSaveToggle.IsChecked && view.Title.EndsWith(pattern) && openedFile != null)
+                SaveCurrentBtn_Click(null, null);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -282,6 +317,10 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
                 if (openedFile == null) return;
                 lastSavedText = textBoxMain.Text;
                 ApplicationView view = ApplicationView.GetForCurrentView();
+
+                if (view.Title.EndsWith(pattern))
+                    view.Title = view.Title.Replace(pattern, string.Empty);
+
                 view.Title = openedFile.DisplayName;
                 await FileIO.WriteTextAsync(openedFile, textBoxMain.Text);
             }
@@ -328,7 +367,6 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
 
             string val = await ShowAddDialogAsync("Search for any text");
             if (string.IsNullOrWhiteSpace(val)) return;
-            previousSearched = val;
             val = val.ToLower();
             textBoxMain.Focus(FocusState.Programmatic);
 
@@ -403,19 +441,19 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             bool isCtrlPressed = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down);
             if (e.Key == VirtualKey.Menu)
             {
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
                 if (gridTopMenu.Visibility == Visibility.Visible)
                 {
                     gridTopMenu.Visibility = Visibility.Collapsed;
+                    localSettings.Values["menuVisibility"] = "Hidden";
                     e.Handled = true;
                 }
                 else
                 {
                     gridTopMenu.Visibility = Visibility.Visible;
+                    localSettings.Values["menuVisibility"] = "Visible";
                     e.Handled = true;
                 }
-
-                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                localSettings.Values["menuVisibility"] = "Visible";
             }
             else if (isCtrlPressed && e.Key == VirtualKey.O)
             {
@@ -451,9 +489,35 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             }
         }
 
-        private void MainPage1_Loaded(object sender, RoutedEventArgs e)
+        private void TextBoxMain_TextChanged(object sender, TextChangedEventArgs e)
         {
+            ApplicationView view = ApplicationView.GetForCurrentView();
 
+            if (lastSavedText != textBoxMain.Text)
+            {
+                if (!view.Title.EndsWith(pattern))
+                    view.Title += pattern;
+            }
+            else if (lastSavedText == textBoxMain.Text && view.Title.EndsWith(pattern))
+            {
+                view.Title = view.Title.Replace(pattern, string.Empty);
+            }
+        }
+
+        private void AutoSaveToggle_Click(object sender, RoutedEventArgs e)
+        {
+            ApplicationDataContainer dataContainer = ApplicationData.Current.LocalSettings;
+
+            if (autoSaveToggle.IsChecked)
+            {
+                timer.Start();
+                dataContainer.Values["AutoSaveEnabled"] = "True";
+            }
+            else
+            {
+                timer.Stop();
+                dataContainer.Values["AutoSaveEnabled"] = "False";
+            }
         }
     }
 }
