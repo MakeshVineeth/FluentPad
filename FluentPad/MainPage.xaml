@@ -94,7 +94,8 @@
                  AcceptsReturn="True" TextWrapping="Wrap"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10"
                  ContextFlyout="{x:Bind ContextMenu}" KeyDown="TextBoxMain_KeyDown"
-                 Background="Transparent" TextChanged="TextBoxMain_TextChanged">
+                 Background="Transparent" TextChanged="TextBoxMain_TextChanged"
+                 IsSpellCheckEnabled="False">
             <TextBox.Resources>
                 <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
                 <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>
