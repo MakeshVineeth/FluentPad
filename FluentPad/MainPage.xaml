@@ -95,7 +95,11 @@
                  AcceptsReturn="True" TextWrapping="Wrap"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10"
                  ContextFlyout="{x:Bind ContextMenu}" KeyDown="TextBoxMain_KeyDown"
-                 Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+                 Background="Transparent">
+            <TextBox.Resources>
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>
+            </TextBox.Resources>
         </TextBox>
     </Grid>
 </Page>

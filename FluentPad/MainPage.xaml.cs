@@ -28,23 +28,6 @@ namespace FluentPad
         public MainPage()
         {
             InitializeComponent();
-            TextBoxMain_GotFocus(null, null);
-            textBoxMain.GotFocus += TextBoxMain_GotFocus;
-            textBoxMain.PointerEntered += TextBoxMain_GotFocus;
-        }
-
-        private void TextBoxMain_GotFocus(object sender, RoutedEventArgs e)
-        {
-            AcrylicBrush textBoxAcrylic = (AcrylicBrush)Application.Current.Resources["SystemControlAcrylicWindowBrush"];
-            
-            Color color = textBoxAcrylic.TintColor;
-            textBoxMain.Background = new SolidColorBrush(color);
-
-            SolidColorBrush textBoxFocused = (SolidColorBrush)Application.Current.Resources["TextControlBackgroundFocused"];
-            textBoxFocused.Color = color;
-
-            SolidColorBrush textBoxPointerOver = (SolidColorBrush)Application.Current.Resources["TextControlBackgroundPointerOver"];
-            textBoxPointerOver.Color = color;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
