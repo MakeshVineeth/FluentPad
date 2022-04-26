@@ -23,9 +23,12 @@
                     <AppBarButton x:Name="PasteButton" Label="Paste" Icon="Paste" Click="PasteButton_Click"/>
                     <AppBarButton x:Name="DeleteButton" Label="Delete" Icon="Delete" Click="DeleteButton_Click"/>
                     <AppBarButton x:Name="SearchGoogleBtn" Label="Search in Google" Icon="Find" Click="SearchGoogleBtn_Click"/>
-                    <AppBarButton x:Name="UppercaseBtn" Label="Uppercase" Icon="FontIncrease" Click="UppercaseBtn_Click"/>
-                    <AppBarButton x:Name="LowercaseBtn" Label="Lowercase" Icon="FontDecrease" Click="LowercaseBtn_Click"/>
-                    <AppBarButton x:Name="TitlecaseBtn" Label="Titlecase" Icon="Font" Click="TitlecaseBtn_Click"/>
+                    <AppBarButton x:Name="CalculateBtn" Label="Calculate" Icon="Calculator" Click="CalculateBtn_Click"/>
+                    <AppBarButton x:Name="UppercaseBtn" Label="Upper case" Icon="FontIncrease" Click="UppercaseBtn_Click"/>
+                    <AppBarButton x:Name="LowercaseBtn" Label="Lower case" Icon="FontDecrease" Click="LowercaseBtn_Click"/>
+                    <AppBarButton x:Name="TitlecaseBtn" Label="Sentence case" Icon="Font" Click="TitlecaseBtn_Click"/>
+                    <AppBarButton x:Name="UndoBtn" Label="Undo" Icon="Undo" Click="UndoBtn_Click"/>
+                    <AppBarButton x:Name="RedoBtn" Label="Redo" Icon="Redo" Click="RedoBtn_Click"/>
                 </CommandBarFlyout.SecondaryCommands>
             </CommandBarFlyout>
         </Grid.Resources>

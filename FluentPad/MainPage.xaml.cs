@@ -13,8 +13,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Core;
 using System.IO;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Media;
-using Windows.UI;
+using System.Data;
 
 namespace FluentPad
 {
@@ -56,6 +55,9 @@ namespace FluentPad
                     autoSaveToggle.IsChecked = false;
                 }
             }
+
+            UndoBtn.IsEnabled = false;
+            RedoBtn.IsEnabled = false;
         }
 
         private void Timer_Tick(object sender, object e)
@@ -151,7 +153,7 @@ namespace FluentPad
             }
             catch (Exception)
             {
-                var messageBox = new MessageDialog("Unable to load file", "ERROR");
+                var messageBox = new MessageDialog("Unable to load file.", "ERROR");
                 await messageBox.ShowAsync();
             }
         }
@@ -188,7 +190,8 @@ namespace FluentPad
 
         private void PasteButton_Click(object sender, RoutedEventArgs e)
         {
-            textBoxMain.PasteFromClipboard();
+            if (textBoxMain.CanPasteClipboardContent)
+                textBoxMain.PasteFromClipboard();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -225,7 +228,7 @@ namespace FluentPad
 
                 if (!success)
                 {
-                    var messageBox = new MessageDialog("Oops, unable to search", "FAILED TO OPEN URL");
+                    var messageBox = new MessageDialog("Oops, unable to search.", "FAILED TO OPEN URL");
                     _ = messageBox.ShowAsync();
                 }
             }
@@ -257,11 +260,14 @@ namespace FluentPad
 
         private void PasteClipboardBtn_Click(object sender, RoutedEventArgs e)
         {
-            textBoxMain.Focus(FocusState.Programmatic);
-            textBoxMain.Text += Environment.NewLine;
-            textBoxMain.SelectionStart = textBoxMain.Text.Length;
-            textBoxMain.SelectionLength = 0;
-            textBoxMain.PasteFromClipboard();
+            if (textBoxMain.CanPasteClipboardContent)
+            {
+                textBoxMain.Focus(FocusState.Programmatic);
+                textBoxMain.Text += Environment.NewLine;
+                textBoxMain.SelectionStart = textBoxMain.Text.Length;
+                textBoxMain.SelectionLength = 0;
+                textBoxMain.PasteFromClipboard();
+            }
         }
 
         private void TrimSpaceBtn_Click(object sender, RoutedEventArgs e)
@@ -299,8 +305,6 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(textBoxMain.Text)) return;
-
                 if (openedFile == null)
                 {
                     var saveDialog = new Windows.Storage.Pickers.FileSavePicker();
@@ -326,7 +330,7 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             }
             catch (Exception)
             {
-                var messageBox = new MessageDialog("Error has occurred", "ERROR");
+                var messageBox = new MessageDialog("Error has occurred.", "ERROR");
                 await messageBox.ShowAsync();
             }
         }
@@ -354,7 +358,7 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             }
             catch (Exception)
             {
-                var messageBox = new MessageDialog("Error has occurred", "ERROR");
+                var messageBox = new MessageDialog("Error has occurred.", "ERROR");
                 await messageBox.ShowAsync();
             }
         }
@@ -416,16 +420,19 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             string text = textBoxMain.Text;
             if (text.Contains(from))
             {
-                text = text.Replace(from, to);
-                textBoxMain.Text = text;
-                var messageBox = new MessageDialog("Replaced!", "Success");
-                await messageBox.ShowAsync();
-                textBoxMain.Focus(FocusState.Programmatic);
-                textBoxMain.SelectionLength = 0;
-                textBoxMain.SelectionStart = 0;
-                int index = text.IndexOf(to);
-                textBoxMain.SelectionStart = index;
-                textBoxMain.SelectionLength = 0;
+                while (text.Contains(from))
+                {
+                    text = text.Replace(from, to);
+                    textBoxMain.Text = text;
+                    var messageBox = new MessageDialog("Replaced!", "Success");
+                    await messageBox.ShowAsync();
+                    textBoxMain.Focus(FocusState.Programmatic);
+                    textBoxMain.SelectionLength = 0;
+                    textBoxMain.SelectionStart = 0;
+                    int index = text.IndexOf(to);
+                    textBoxMain.SelectionStart = index;
+                    textBoxMain.SelectionLength = 0;
+                }
             }
             else
             {
@@ -502,6 +509,24 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             {
                 view.Title = view.Title.Replace(pattern, string.Empty);
             }
+
+            if (textBoxMain.CanUndo)
+            {
+                UndoBtn.IsEnabled = true;
+            }
+            else
+            {
+                UndoBtn.IsEnabled = false;
+            }
+
+            if (textBoxMain.CanRedo)
+            {
+                RedoBtn.IsEnabled = true;
+            }
+            else
+            {
+                RedoBtn.IsEnabled = false;
+            }
         }
 
         private void AutoSaveToggle_Click(object sender, RoutedEventArgs e)
@@ -517,6 +542,47 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             {
                 timer.Stop();
                 dataContainer.Values["AutoSaveEnabled"] = "False";
+            }
+        }
+
+        private void UndoBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (textBoxMain.CanUndo)
+                textBoxMain.Undo();
+        }
+
+        private void RedoBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (textBoxMain.CanRedo)
+                textBoxMain.Redo();
+        }
+
+        private async void CalculateBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(textBoxMain.Text)) return;
+                string expression = textBoxMain.SelectedText;
+
+                if (!string.IsNullOrWhiteSpace(expression))
+                {
+                    var result = new DataTable().Compute(expression, null);
+                    if (result == DBNull.Value)
+                    {
+                        var msgBox = new MessageDialog("Unable to calculate the expression!", "ERROR");
+                        await msgBox.ShowAsync();
+                    }
+                    else
+                    {
+                        var msgBox = new MessageDialog(result.ToString(), "ANSWER");
+                        await msgBox.ShowAsync();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                var msgBox = new MessageDialog("Error has occurred.", "ERROR");
+                await msgBox.ShowAsync();
             }
         }
     }
