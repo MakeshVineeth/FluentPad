@@ -4,9 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     RequestedTheme="Dark"
-    Loaded="MainPage1_Loaded">
+    Loaded="MainPage1_Loaded"
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -29,9 +31,9 @@
             </CommandBarFlyout>
         </Grid.Resources>
 
-        <Grid x:Name="gridTopMenu" Grid.Row="0" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+        <Grid x:Name="gridTopMenu" Grid.Row="0" Background="{ThemeResource SystemControlAcrylicElementBrush}">
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="fileMenuBtn" Background="Transparent" Click="FileMenuButton_Click" Content="File" Padding="5" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Segoe UI">
+                <Button x:Name="fileMenuBtn" Background="Transparent" Click="FileMenuButton_Click" Content="File" Padding="5" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Segoe UI" BorderThickness="0">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem x:Name="newButton" Text="New" Click="NewButton_Click"/>
@@ -49,7 +51,7 @@
                 <Button x:Name="operationsBtn" Click="OperationsBtn_Click" Content="Operations" VerticalAlignment="Center" 
                         HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
                         VerticalContentAlignment="Center" Background="Transparent" 
-                        FontFamily="Segoe UI">
+                        FontFamily="Segoe UI" BorderThickness="0">
 
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
@@ -63,7 +65,7 @@
                 <Button x:Name="miscButton" Content="Miscellaneous" Click="MiscButton_Click"
                         VerticalAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center" FontFamily="Segoe UI"
-                        Background="Transparent">
+                        Background="Transparent" BorderThickness="0">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem x:Name="InsertDateTimeBtn" Text="Insert Date/Time" Click="InsertDateTimeBtn_Click"/>
@@ -76,7 +78,7 @@
                 <Button x:Name="helpButton" Content="Help" Click="HelpButton_Click"
                         VerticalAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center"
                         HorizontalContentAlignment="Center" FontFamily="Segoe UI"
-                        Background="Transparent">
+                        Background="Transparent" BorderThickness="0">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem x:Name="ShorcutsMenuBtn" Text="Shortcuts" Click="ShorcutsMenuBtn_Click"/>
@@ -92,11 +94,8 @@
                  FontFamily="Segoe UI Variable Display" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                  AcceptsReturn="True" TextWrapping="Wrap"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="10"
-                 ContextFlyout="{x:Bind ContextMenu}" KeyDown="TextBoxMain_KeyDown">
-            <TextBox.Resources>
-                <SolidColorBrush x:Key="TextControlForeground" Color="White"/>
-                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="White"/>
-            </TextBox.Resources>
+                 ContextFlyout="{x:Bind ContextMenu}" KeyDown="TextBoxMain_KeyDown"
+                 Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         </TextBox>
     </Grid>
 </Page>

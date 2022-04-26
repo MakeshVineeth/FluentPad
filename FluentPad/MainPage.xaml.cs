@@ -35,7 +35,7 @@ namespace FluentPad
 
         private void TextBoxMain_GotFocus(object sender, RoutedEventArgs e)
         {
-            AcrylicBrush textBoxAcrylic = (AcrylicBrush)Application.Current.Resources["SystemControlBaseMediumLowAcrylicWindowMediumBrush"];
+            AcrylicBrush textBoxAcrylic = (AcrylicBrush)Application.Current.Resources["SystemControlAcrylicWindowBrush"];
             
             Color color = textBoxAcrylic.TintColor;
             textBoxMain.Background = new SolidColorBrush(color);
