@@ -145,7 +145,7 @@ namespace FluentPad
                     string text = await FileIO.ReadTextAsync(file);
                     if (!string.IsNullOrWhiteSpace(text))
                     {
-                        lastSavedText = text;
+                        lastSavedText = text.Replace("\n", string.Empty); // TextBox using \r as newlines instead of \n.
                         textBoxMain.Text = text;
                         FixAutoSelect();
                     }
@@ -319,14 +319,16 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
                 }
 
                 if (openedFile == null) return;
-                lastSavedText = textBoxMain.Text;
+
+                string text = textBoxMain.Text;
+                lastSavedText = text.Replace("\n", string.Empty); // TextBox using \r as newlines instead of \n.
                 ApplicationView view = ApplicationView.GetForCurrentView();
 
                 if (view.Title.EndsWith(pattern))
                     view.Title = view.Title.Replace(pattern, string.Empty);
 
                 view.Title = openedFile.DisplayName;
-                await FileIO.WriteTextAsync(openedFile, textBoxMain.Text);
+                await FileIO.WriteTextAsync(openedFile, text);
             }
             catch (Exception)
             {
@@ -499,13 +501,15 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
         private void TextBoxMain_TextChanged(object sender, TextChangedEventArgs e)
         {
             ApplicationView view = ApplicationView.GetForCurrentView();
+            string text = textBoxMain.Text;
+            int compareInt = string.CompareOrdinal(lastSavedText, text);
 
-            if (lastSavedText != textBoxMain.Text)
+            if (compareInt != 0)
             {
                 if (!view.Title.EndsWith(pattern))
                     view.Title += pattern;
             }
-            else if (lastSavedText == textBoxMain.Text && view.Title.EndsWith(pattern))
+            else if (compareInt == 0 && view.Title.EndsWith(pattern))
             {
                 view.Title = view.Title.Replace(pattern, string.Empty);
             }
