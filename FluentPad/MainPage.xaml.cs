@@ -14,6 +14,8 @@ using Windows.UI.Core;
 using System.IO;
 using Windows.UI.Xaml.Navigation;
 using System.Data;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace FluentPad
 {
@@ -102,7 +104,7 @@ namespace FluentPad
 
             if (!string.IsNullOrWhiteSpace(text))
             {
-                lastSavedText = text;
+                lastSavedText = text.Replace("\n", string.Empty);
                 textBoxMain.Text = text;
                 FixAutoSelect();
             }
@@ -496,6 +498,10 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             {
                 LowercaseBtn_Click(sender, e);
             }
+            else if (isCtrlPressed && e.Key == VirtualKey.P)
+            {
+                CalculateBtn_Click(sender, e);
+            }
         }
 
         private void TextBoxMain_TextChanged(object sender, TextChangedEventArgs e)
@@ -586,6 +592,28 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             catch (Exception)
             {
                 var msgBox = new MessageDialog("Error has occurred.", "ERROR");
+                await msgBox.ShowAsync();
+            }
+        }
+
+        private async void StatisticsBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string selectedText = textBoxMain.Text;
+            if (!string.IsNullOrWhiteSpace(selectedText))
+            {
+                int lines = Regex.Matches(selectedText, "\r", RegexOptions.Multiline).Count + 1;
+                char[] delimiters = new char[] { ' ', '\r', '\n' };
+                int words = selectedText.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).Length;
+                int charsNoSpaces = selectedText.Count(c => !char.IsWhiteSpace(c));
+                int paragraphs = Regex.Matches(selectedText, "[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*").Count;
+                int specialCharacters = Regex.Matches(selectedText, "[~!@#$%^&*()_+{}:\"<>?]").Count;
+                int numbers = selectedText.Count(c => char.IsDigit(c));
+
+                string message = "Lines: " + lines + "\r" + "Words: " + words + "\r" + "Characters without spaces: " + charsNoSpaces + "\r" + "Characters with spaces: " + selectedText.Length
+                    + "\r" + "Paragraphs: " + paragraphs + "\r" + "Special Characters: " + specialCharacters
+                    + "\r" + "Digits: " + numbers + "\r\r\r" + "(Not all information that is shown above may be accurate)";
+
+                var msgBox = new MessageDialog(message, "Statistics");
                 await msgBox.ShowAsync();
             }
         }

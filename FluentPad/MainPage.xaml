@@ -38,14 +38,37 @@
                 <Button x:Name="fileMenuBtn" Background="Transparent" Click="FileMenuButton_Click" Content="File" Padding="5" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Segoe UI" BorderThickness="0">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem x:Name="newButton" Text="New" Click="NewButton_Click"/>
-                            <MenuFlyoutItem x:Name="openButton" Text="Open" Click="OpenButton_Click"/>
+                            <MenuFlyoutItem x:Name="newButton" Text="New" Click="NewButton_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="NewWindow"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="openButton" Text="Open" Click="OpenButton_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="OpenFile"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            
                             <MenuFlyoutSubItem x:Name="saveButton" Text="Save">
+                                <MenuFlyoutSubItem.Icon>
+                                    <SymbolIcon Symbol="SaveLocal"/>
+                                </MenuFlyoutSubItem.Icon>
                                 <MenuFlyoutItem x:Name="saveCurrentBtn" Text="Save Current" Click="SaveCurrentBtn_Click"/>
                                 <MenuFlyoutItem x:Name="saveNewBtn" Text="Save New" Click="SaveNewBtn_Click"/>
                             </MenuFlyoutSubItem>
-                            <ToggleMenuFlyoutItem x:Name="autoSaveToggle" Text="Auto Save" Click="AutoSaveToggle_Click"/>
-                            <MenuFlyoutItem x:Name="exitButton" Text="Exit" Click="ExitButton_Click"/>
+
+                            <ToggleMenuFlyoutItem x:Name="autoSaveToggle" Text="Auto Save" Click="AutoSaveToggle_Click">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Save"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="exitButton" Text="Exit" Click="ExitButton_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="ClosePane"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>
@@ -57,9 +80,23 @@
 
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem x:Name="SearchTextBtn" Text="Search" Click="SearchTextBtn_Click"/>
-                            <MenuFlyoutItem x:Name="ReplaceBtn" Text="Replace" Click="ReplaceBtn_Click"/>
-                            <MenuFlyoutItem x:Name="SelectAllBtn" Text="Select All" Click="SelectAllBtn_Click"/>
+                            <MenuFlyoutItem x:Name="SearchTextBtn" Text="Search" Click="SearchTextBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Find"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="ReplaceBtn" Text="Replace" Click="ReplaceBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Edit"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="SelectAllBtn" Text="Select All" Click="SelectAllBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="SelectAll"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>
@@ -70,9 +107,29 @@
                         Background="Transparent" BorderThickness="0">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem x:Name="InsertDateTimeBtn" Text="Insert Date/Time" Click="InsertDateTimeBtn_Click"/>
-                            <MenuFlyoutItem x:Name="PasteClipboardBtn" Text="Paste from Clipboard" Click="PasteClipboardBtn_Click"/>
-                            <MenuFlyoutItem x:Name="TrimSpaceBtn" Text="Remove Extra Spaces" Click="TrimSpaceBtn_Click"/>
+                            <MenuFlyoutItem x:Name="InsertDateTimeBtn" Text="Insert Date/Time" Click="InsertDateTimeBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Clock"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="PasteClipboardBtn" Text="Paste from Clipboard" Click="PasteClipboardBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Paste"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="TrimSpaceBtn" Text="Remove Extra Spaces" Click="TrimSpaceBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Trim"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="StatisticsBtn" Text="Statistics" Click="StatisticsBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="ShowResults"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>
@@ -83,8 +140,17 @@
                         Background="Transparent" BorderThickness="0">
                     <FlyoutBase.AttachedFlyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem x:Name="ShorcutsMenuBtn" Text="Shortcuts" Click="ShorcutsMenuBtn_Click"/>
-                            <MenuFlyoutItem x:Name="AboutBtn" Text="About" Click="AboutBtn_Click"/>
+                            <MenuFlyoutItem x:Name="ShorcutsMenuBtn" Text="Shortcuts" Click="ShorcutsMenuBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Keyboard"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="AboutBtn" Text="About" Click="AboutBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Help"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>
