@@ -298,7 +298,9 @@ Ctrl + H for replacing text
 Ctrl + G to search in Google
 Ctrl + I to insert date/time
 Ctrl + U for Upper Case
-Ctrl + L for Lower Case", "Shortcuts Guide");
+Ctrl + L for Lower Case
+Ctrl + P for Calculating
+Ctrl + K for Statistics", "Shortcuts Guide");
 
             await messageBox.ShowAsync();
         }
@@ -555,6 +557,10 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
             else if (isCtrlPressed && e.Key == VirtualKey.P)
             {
                 CalculateBtn_Click(sender, e);
+            }
+            else if (isCtrlPressed && e.Key == VirtualKey.K)
+            {
+                StatisticsBtn_Click(sender, e);
             }
         }
 
