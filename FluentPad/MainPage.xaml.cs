@@ -370,7 +370,13 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
         private async void SearchTextBtn_Click(object sender, RoutedEventArgs e)
         {
             string text = textBoxMain.Text;
-            if (string.IsNullOrWhiteSpace(text)) return;
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                var msgBox = new MessageDialog("No text found!", "Unable to search");
+                await msgBox.ShowAsync();
+                return;
+            }
+
             text = text.ToLower();
 
             string val = await ShowAddDialogAsync("Search for any text");
@@ -413,37 +419,85 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
 
         private async void ReplaceBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(textBoxMain.Text)) return;
-            string from = await ShowAddDialogAsync("Enter text to replace for");
-
-            if (string.IsNullOrWhiteSpace(from)) return;
-            string to = await ShowAddDialogAsync("Enter text to replace with");
-
-            if (string.IsNullOrWhiteSpace(to)) return;
-
-            string text = textBoxMain.Text;
-            if (text.Contains(from))
+            if (string.IsNullOrWhiteSpace(textBoxMain.Text))
             {
-                while (text.Contains(from))
+                var msgBox = new MessageDialog("No text found!", "Replace failed");
+                await msgBox.ShowAsync();
+                return;
+            }
+
+            var inputTextBoxFrom = new TextBox
+            {
+                AcceptsReturn = false,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                PlaceholderText = "Enter old text...",
+                Margin = new Thickness(0, 0, 0, 10),
+            };
+
+            var inputTextBoxTo = new TextBox
+            {
+                AcceptsReturn = false,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                PlaceholderText = "Enter new text...",
+                Margin = new Thickness(0, 0, 0, 10),
+            };
+
+            var caseInsensitive = new CheckBox
+            {
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Content = "Case Insensitive",
+                IsChecked = false,
+                IsThreeState = false,
+            };
+
+            StackPanel stackPanel = new StackPanel();
+            stackPanel.Children.Add(inputTextBoxFrom);
+            stackPanel.Children.Add(inputTextBoxTo);
+            stackPanel.Children.Add(caseInsensitive);
+
+            var dialog = new ContentDialog
+            {
+                Content = stackPanel,
+                Title = "Enter text to replace for",
+                IsSecondaryButtonEnabled = true,
+                PrimaryButtonText = "Ok",
+                SecondaryButtonText = "Cancel"
+            };
+
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                bool caseFlag = caseInsensitive.IsChecked ?? false;
+                string from = inputTextBoxFrom.Text;
+                string to = inputTextBoxTo.Text;
+
+                if (string.IsNullOrWhiteSpace(to) && string.IsNullOrWhiteSpace(from)) return;
+
+                string text = textBoxMain.Text;
+                StringComparison comparison = caseFlag ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
+
+                if (text.Contains(from, comparison))
                 {
-                    text = text.Replace(from, to);
-                    textBoxMain.Text = text;
-                    var messageBox = new MessageDialog("Replaced!", "Success");
-                    await messageBox.ShowAsync();
-                    textBoxMain.Focus(FocusState.Programmatic);
+                    while (text.Contains(from, comparison))
+                    {
+                        text = text.Replace(from, to, comparison);
+                        textBoxMain.Text = text;
+                        var messageBox = new MessageDialog("Replaced!", "Success");
+                        await messageBox.ShowAsync();
+                        textBoxMain.Focus(FocusState.Programmatic);
+                        textBoxMain.SelectionLength = 0;
+                        textBoxMain.SelectionStart = 0;
+                        int index = text.IndexOf(to);
+                        textBoxMain.SelectionStart = index;
+                        textBoxMain.SelectionLength = 0;
+                    }
+                }
+                else
+                {
                     textBoxMain.SelectionLength = 0;
                     textBoxMain.SelectionStart = 0;
-                    int index = text.IndexOf(to);
-                    textBoxMain.SelectionStart = index;
-                    textBoxMain.SelectionLength = 0;
+                    var messageBox = new MessageDialog("Not found any instances to replace with!", "Error");
+                    await messageBox.ShowAsync();
                 }
-            }
-            else
-            {
-                textBoxMain.SelectionLength = 0;
-                textBoxMain.SelectionStart = 0;
-                var messageBox = new MessageDialog("Not found any instances to replace with!", "Error");
-                await messageBox.ShowAsync();
             }
         }
 
@@ -614,6 +668,11 @@ Ctrl + L for Lower Case", "Shortcuts Guide");
                     + "\r" + "Digits: " + numbers + "\r\r\r" + "(Not all information that is shown above may be accurate)";
 
                 var msgBox = new MessageDialog(message, "Statistics");
+                await msgBox.ShowAsync();
+            }
+            else
+            {
+                var msgBox = new MessageDialog("No text found!", "Statistics");
                 await msgBox.ShowAsync();
             }
         }
