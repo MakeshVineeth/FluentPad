@@ -7,7 +7,14 @@ namespace FluentPad
 {
     internal class Operations
     {
-        public async void Replace(TextBox textBoxMain)
+        private readonly TextBox textBoxMain;
+
+        public Operations(TextBox textBoxMain)
+        {
+            this.textBoxMain = textBoxMain;
+        }
+
+        public async void Replace()
         {
             if (string.IsNullOrWhiteSpace(textBoxMain.Text))
             {
@@ -89,7 +96,7 @@ namespace FluentPad
             }
         }
 
-        public async void SearchText(TextBox textBoxMain)
+        public async void SearchText()
         {
             string text = textBoxMain.Text;
             if (string.IsNullOrWhiteSpace(text))
@@ -121,7 +128,7 @@ namespace FluentPad
             }
         }
 
-        public void SelectAll(TextBox textBoxMain)
+        public void SelectAll()
         {
             if (!string.IsNullOrWhiteSpace(textBoxMain.Text))
             {

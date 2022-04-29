@@ -130,6 +130,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="CommonUtils.cs" />
+    <Compile Include="ContextOptions.cs" />
     <Compile Include="HelpMenu.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

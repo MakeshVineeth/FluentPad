@@ -2,13 +2,21 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace FluentPad
 {
     internal class Miscellaneous
     {
-        public async void GetStatistics(TextBox textBoxMain)
+        private readonly TextBox textBoxMain;
+
+        public Miscellaneous(TextBox textBoxMain)
+        {
+            this.textBoxMain = textBoxMain;
+        }
+
+        public async void GetStatistics()
         {
             string selectedText = textBoxMain.Text;
             if (!string.IsNullOrWhiteSpace(selectedText))
@@ -32,6 +40,34 @@ namespace FluentPad
             {
                 var msgBox = new MessageDialog("No text found!", "Statistics");
                 await msgBox.ShowAsync();
+            }
+        }
+
+        public void InsertDateTime(TextBox textBoxMain)
+        {
+            textBoxMain.Focus(FocusState.Programmatic);
+            DateTime now = DateTime.Now;
+            string date_time = now.ToString();
+            textBoxMain.Text += " " + date_time;
+            textBoxMain.SelectionStart = textBoxMain.Text.Length;
+            textBoxMain.SelectionLength = 0;
+        }
+
+        public void RemoveSpaces(TextBox textBoxMain)
+        {
+            textBoxMain.Text = textBoxMain.Text.Trim();
+            textBoxMain.Focus(FocusState.Programmatic);
+        }
+
+        public void PasteFromClipboard()
+        {
+            if (textBoxMain.CanPasteClipboardContent)
+            {
+                textBoxMain.Focus(FocusState.Programmatic);
+                textBoxMain.Text += Environment.NewLine;
+                textBoxMain.SelectionStart = textBoxMain.Text.Length;
+                textBoxMain.SelectionLength = 0;
+                textBoxMain.PasteFromClipboard();
             }
         }
     }

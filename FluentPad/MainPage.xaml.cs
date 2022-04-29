@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Net;
 using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
@@ -12,29 +11,29 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Core;
 using System.IO;
 using Windows.UI.Xaml.Navigation;
-using System.Data;
-using System.Text.RegularExpressions;
-using System.Linq;
 
 namespace FluentPad
 {
     public sealed partial class MainPage : Page
     {
-        StorageFile openedFile = null;
-        string lastSavedText = string.Empty;
-        const string pattern = " *";
-        readonly DispatcherTimer timer;
-        Operations operations;
-        Miscellaneous miscellaneous;
-        HelpMenu helpMenu;
+        private StorageFile openedFile = null;
+        private string lastSavedText = string.Empty;
+        private const string pattern = " *";
+        private readonly DispatcherTimer timer;
+        private readonly Operations operations;
+        private readonly Miscellaneous miscellaneous;
+        private readonly HelpMenu helpMenu;
+        private readonly ContextOptions contextOptions;
 
 
         public MainPage()
         {
             InitializeComponent();
-            operations = new Operations();
-            miscellaneous = new Miscellaneous();
+
+            operations = new Operations(textBoxMain);
+            miscellaneous = new Miscellaneous(textBoxMain);
             helpMenu = new HelpMenu();
+            contextOptions = new ContextOptions(textBoxMain);
 
             timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
@@ -117,25 +116,13 @@ namespace FluentPad
             }
         }
 
-        private void FileMenuButton_Click(object sender, RoutedEventArgs e)
-        {
-            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-        }
+        private void FileMenuButton_Click(object sender, RoutedEventArgs e) => FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
 
-        private void OperationsBtn_Click(object sender, RoutedEventArgs e)
-        {
-            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-        }
+        private void OperationsBtn_Click(object sender, RoutedEventArgs e) => FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
 
-        private void MiscButton_Click(object sender, RoutedEventArgs e)
-        {
-            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-        }
+        private void MiscButton_Click(object sender, RoutedEventArgs e) => FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
 
-        private void HelpButton_Click(object sender, RoutedEventArgs e)
-        {
-            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-        }
+        private void HelpButton_Click(object sender, RoutedEventArgs e) => FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
 
         private async void OpenButton_Click(object sender, RoutedEventArgs e)
         {
@@ -167,15 +154,9 @@ namespace FluentPad
             }
         }
 
-        private void FixAutoSelect()
-        {
-            textBoxMain.SelectionStart = 0;
-        }
+        private void FixAutoSelect() => textBoxMain.SelectionStart = 0;
 
-        private void ExitButton_Click(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Exit();
-        }
+        private void ExitButton_Click(object sender, RoutedEventArgs e) => Application.Current.Exit();
 
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
@@ -187,15 +168,8 @@ namespace FluentPad
             view.Title = string.Empty;
         }
 
-        private void CutButton_Click(object sender, RoutedEventArgs e)
-        {
-            textBoxMain.CutSelectionToClipboard();
-        }
-
-        private void CopyButton_Click(object sender, RoutedEventArgs e)
-        {
-            textBoxMain.CopySelectionToClipboard();
-        }
+        private void CutButton_Click(object sender, RoutedEventArgs e) => contextOptions.CutText();
+        private void CopyButton_Click(object sender, RoutedEventArgs e) => contextOptions.CopyText();
 
         private void PasteButton_Click(object sender, RoutedEventArgs e)
         {
@@ -224,72 +198,19 @@ namespace FluentPad
             textBoxMain.SelectedText = ti.ToTitleCase(textBoxMain.SelectedText.ToLower());
         }
 
-        private async void SearchGoogleBtn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string text = textBoxMain.SelectedText.Trim();
-                if (string.IsNullOrWhiteSpace(text)) return;
-                string google = "https://www.google.com/search?q=";
-                string url = google + WebUtility.UrlEncode(text);
-                var urlObject = new Uri(url);
-                bool success = await Launcher.LaunchUriAsync(urlObject);
+        private void SearchGoogleBtn_Click(object sender, RoutedEventArgs e) => contextOptions.GoogleSearch();
 
-                if (!success)
-                {
-                    var messageBox = new MessageDialog("Oops, unable to search.", "FAILED TO OPEN URL");
-                    _ = messageBox.ShowAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                var messageBox = new MessageDialog("Oops, an error has occurred: " + ex.Message, "ERROR");
-                _ = messageBox.ShowAsync();
-            }
-        }
+        private void SelectAllBtn_Click(object sender, RoutedEventArgs e) => operations.SelectAll();
 
-        private void SelectAllBtn_Click(object sender, RoutedEventArgs e)
-        {
-            operations.SelectAll(textBoxMain);
-        }
+        private void InsertDateTimeBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.InsertDateTime(textBoxMain);
 
-        private void InsertDateTimeBtn_Click(object sender, RoutedEventArgs e)
-        {
-            textBoxMain.Focus(FocusState.Programmatic);
-            DateTime now = DateTime.Now;
-            string date_time = now.ToString();
-            textBoxMain.Text += " " + date_time;
-            textBoxMain.SelectionStart = textBoxMain.Text.Length;
-            textBoxMain.SelectionLength = 0;
-        }
+        private void PasteClipboardBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.PasteFromClipboard();
 
-        private void PasteClipboardBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (textBoxMain.CanPasteClipboardContent)
-            {
-                textBoxMain.Focus(FocusState.Programmatic);
-                textBoxMain.Text += Environment.NewLine;
-                textBoxMain.SelectionStart = textBoxMain.Text.Length;
-                textBoxMain.SelectionLength = 0;
-                textBoxMain.PasteFromClipboard();
-            }
-        }
+        private void TrimSpaceBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.RemoveSpaces(textBoxMain);
 
-        private void TrimSpaceBtn_Click(object sender, RoutedEventArgs e)
-        {
-            textBoxMain.Text = textBoxMain.Text.Trim();
-            textBoxMain.Focus(FocusState.Programmatic);
-        }
+        private void AboutBtn_Click(object sender, RoutedEventArgs e) => helpMenu.ShowAbout();
 
-        private void AboutBtn_Click(object sender, RoutedEventArgs e)
-        {
-            helpMenu.ShowAbout();
-        }
-
-        private void ShorcutsMenuBtn_Click(object sender, RoutedEventArgs e)
-        {
-            helpMenu.ShowHelp();
-        }
+        private void ShorcutsMenuBtn_Click(object sender, RoutedEventArgs e) => helpMenu.ShowHelp();
 
         private async void SaveCurrentBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -355,15 +276,8 @@ namespace FluentPad
             }
         }
 
-        private void SearchTextBtn_Click(object sender, RoutedEventArgs e)
-        {
-            operations.SearchText(textBoxMain);
-        }
-
-        private void ReplaceBtn_Click(object sender, RoutedEventArgs e)
-        {
-            operations.Replace(textBoxMain);
-        }
+        private void SearchTextBtn_Click(object sender, RoutedEventArgs e) => operations.SearchText();
+        private void ReplaceBtn_Click(object sender, RoutedEventArgs e) => operations.Replace();
 
         private void TextBoxMain_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
@@ -489,38 +403,7 @@ namespace FluentPad
                 textBoxMain.Redo();
         }
 
-        private async void CalculateBtn_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(textBoxMain.Text)) return;
-                string expression = textBoxMain.SelectedText;
-
-                if (!string.IsNullOrWhiteSpace(expression))
-                {
-                    var result = new DataTable().Compute(expression, null);
-                    if (result == DBNull.Value)
-                    {
-                        var msgBox = new MessageDialog("Unable to calculate the expression!", "ERROR");
-                        await msgBox.ShowAsync();
-                    }
-                    else
-                    {
-                        var msgBox = new MessageDialog(result.ToString(), "ANSWER");
-                        await msgBox.ShowAsync();
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                var msgBox = new MessageDialog("Error has occurred.", "ERROR");
-                await msgBox.ShowAsync();
-            }
-        }
-
-        private void StatisticsBtn_Click(object sender, RoutedEventArgs e)
-        {
-            miscellaneous.GetStatistics(textBoxMain);
-        }
+        private void CalculateBtn_Click(object sender, RoutedEventArgs e) => contextOptions.Calculate();
+        private void StatisticsBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.GetStatistics();
     }
 }
