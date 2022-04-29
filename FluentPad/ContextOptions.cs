@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Globalization;
 using System.Net;
 using Windows.System;
 using Windows.UI.Popups;
@@ -69,8 +70,34 @@ namespace FluentPad
             }
         }
 
+        public void PasteContent()
+        {
+            if (textBoxMain.CanPasteClipboardContent)
+                textBoxMain.PasteFromClipboard();
+        }
+
         public void CopyText() => textBoxMain.CopySelectionToClipboard();
         public void CutText() => textBoxMain.CutSelectionToClipboard();
-        
+        public void Delete() => textBoxMain.SelectedText = string.Empty;
+        public void ToUpperCase() => textBoxMain.SelectedText = textBoxMain.SelectedText.ToUpper();
+        public void ToLowerCase() => textBoxMain.SelectedText = textBoxMain.SelectedText.ToLower();
+
+        public void Undo()
+        {
+            if (textBoxMain.CanUndo)
+                textBoxMain.Undo();
+        }
+
+        public void Redo()
+        {
+            if (textBoxMain.CanRedo)
+                textBoxMain.Redo();
+        }
+
+        public void ToSentenceCase()
+        {
+            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
+            textBoxMain.SelectedText = ti.ToTitleCase(textBoxMain.SelectedText.ToLower());
+        }
     }
 }

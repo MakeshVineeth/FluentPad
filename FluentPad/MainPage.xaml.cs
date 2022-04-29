@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
@@ -25,6 +24,10 @@ namespace FluentPad
         private readonly HelpMenu helpMenu;
         private readonly ContextOptions contextOptions;
 
+        private const string autoSavePref = "AutoSaveEnabled";
+
+        private const string menuVisibilityPref = "menuVisibility";
+
 
         public MainPage()
         {
@@ -40,7 +43,7 @@ namespace FluentPad
             timer.Interval = new TimeSpan(0, 0, 3);
 
             ApplicationDataContainer dataContainer = ApplicationData.Current.LocalSettings;
-            string showMenu = dataContainer.Values["menuVisibility"]?.ToString() ?? string.Empty;
+            string showMenu = dataContainer.Values[menuVisibilityPref]?.ToString() ?? string.Empty;
             if (!string.IsNullOrWhiteSpace(showMenu) && showMenu.Contains("Visible"))
             {
                 gridTopMenu.Visibility = Visibility.Visible;
@@ -50,7 +53,7 @@ namespace FluentPad
                 gridTopMenu.Visibility = Visibility.Collapsed;
             }
 
-            string autoSaveCheck = dataContainer.Values["AutoSaveEnabled"]?.ToString() ?? string.Empty;
+            string autoSaveCheck = dataContainer.Values[autoSavePref]?.ToString() ?? string.Empty;
             if (!string.IsNullOrWhiteSpace(autoSaveCheck))
             {
                 if (autoSaveCheck.Contains("True"))
@@ -156,7 +159,7 @@ namespace FluentPad
 
         private void FixAutoSelect() => textBoxMain.SelectionStart = 0;
 
-        private void ExitButton_Click(object sender, RoutedEventArgs e) => Application.Current.Exit();
+        private void ExitButton_Click(object sender, RoutedEventArgs e) => helpMenu.ExitApp();
 
         private void NewButton_Click(object sender, RoutedEventArgs e)
         {
@@ -170,46 +173,17 @@ namespace FluentPad
 
         private void CutButton_Click(object sender, RoutedEventArgs e) => contextOptions.CutText();
         private void CopyButton_Click(object sender, RoutedEventArgs e) => contextOptions.CopyText();
-
-        private void PasteButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (textBoxMain.CanPasteClipboardContent)
-                textBoxMain.PasteFromClipboard();
-        }
-
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            textBoxMain.SelectedText = string.Empty;
-        }
-
-        private void UppercaseBtn_Click(object sender, RoutedEventArgs e)
-        {
-            textBoxMain.SelectedText = textBoxMain.SelectedText.ToUpper();
-        }
-
-        private void LowercaseBtn_Click(object sender, RoutedEventArgs e)
-        {
-            textBoxMain.SelectedText = textBoxMain.SelectedText.ToLower();
-        }
-
-        private void TitlecaseBtn_Click(object sender, RoutedEventArgs e)
-        {
-            TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            textBoxMain.SelectedText = ti.ToTitleCase(textBoxMain.SelectedText.ToLower());
-        }
-
+        private void PasteButton_Click(object sender, RoutedEventArgs e) => contextOptions.PasteContent();
+        private void DeleteButton_Click(object sender, RoutedEventArgs e) => contextOptions.Delete();
+        private void UppercaseBtn_Click(object sender, RoutedEventArgs e) => contextOptions.ToUpperCase();
+        private void LowercaseBtn_Click(object sender, RoutedEventArgs e) => contextOptions.ToLowerCase();
+        private void TitlecaseBtn_Click(object sender, RoutedEventArgs e) => contextOptions.ToSentenceCase();
         private void SearchGoogleBtn_Click(object sender, RoutedEventArgs e) => contextOptions.GoogleSearch();
-
         private void SelectAllBtn_Click(object sender, RoutedEventArgs e) => operations.SelectAll();
-
         private void InsertDateTimeBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.InsertDateTime(textBoxMain);
-
         private void PasteClipboardBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.PasteFromClipboard();
-
         private void TrimSpaceBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.RemoveSpaces(textBoxMain);
-
         private void AboutBtn_Click(object sender, RoutedEventArgs e) => helpMenu.ShowAbout();
-
         private void ShorcutsMenuBtn_Click(object sender, RoutedEventArgs e) => helpMenu.ShowHelp();
 
         private async void SaveCurrentBtn_Click(object sender, RoutedEventArgs e)
@@ -288,13 +262,13 @@ namespace FluentPad
                 if (gridTopMenu.Visibility == Visibility.Visible)
                 {
                     gridTopMenu.Visibility = Visibility.Collapsed;
-                    localSettings.Values["menuVisibility"] = "Hidden";
+                    localSettings.Values[menuVisibilityPref] = "Hidden";
                     e.Handled = true;
                 }
                 else
                 {
                     gridTopMenu.Visibility = Visibility.Visible;
-                    localSettings.Values["menuVisibility"] = "Visible";
+                    localSettings.Values[menuVisibilityPref] = "Visible";
                     e.Handled = true;
                 }
             }
@@ -382,27 +356,17 @@ namespace FluentPad
             if (autoSaveToggle.IsChecked)
             {
                 timer.Start();
-                dataContainer.Values["AutoSaveEnabled"] = "True";
+                dataContainer.Values[autoSavePref] = "True";
             }
             else
             {
                 timer.Stop();
-                dataContainer.Values["AutoSaveEnabled"] = "False";
+                dataContainer.Values[autoSavePref] = "False";
             }
         }
 
-        private void UndoBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (textBoxMain.CanUndo)
-                textBoxMain.Undo();
-        }
-
-        private void RedoBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (textBoxMain.CanRedo)
-                textBoxMain.Redo();
-        }
-
+        private void UndoBtn_Click(object sender, RoutedEventArgs e) => contextOptions.Undo();
+        private void RedoBtn_Click(object sender, RoutedEventArgs e) => contextOptions.Redo();
         private void CalculateBtn_Click(object sender, RoutedEventArgs e) => contextOptions.Calculate();
         private void StatisticsBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.GetStatistics();
     }

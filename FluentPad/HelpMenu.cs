@@ -1,5 +1,6 @@
 ﻿using System;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 
 namespace FluentPad
 {
@@ -31,5 +32,7 @@ All Rights Reserved.", "About Notepad");
 
             await messageBox.ShowAsync();
         }
+
+        public void ExitApp() => Application.Current.Exit();
     }
 }
