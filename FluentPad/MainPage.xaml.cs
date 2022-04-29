@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
@@ -25,10 +24,18 @@ namespace FluentPad
         string lastSavedText = string.Empty;
         const string pattern = " *";
         readonly DispatcherTimer timer;
+        Operations operations;
+        Miscellaneous miscellaneous;
+        HelpMenu helpMenu;
+
 
         public MainPage()
         {
             InitializeComponent();
+            operations = new Operations();
+            miscellaneous = new Miscellaneous();
+            helpMenu = new HelpMenu();
+
             timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 3);
@@ -243,11 +250,7 @@ namespace FluentPad
 
         private void SelectAllBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(textBoxMain.Text))
-            {
-                textBoxMain.Focus(FocusState.Programmatic);
-                textBoxMain.SelectAll();
-            }
+            operations.SelectAll(textBoxMain);
         }
 
         private void InsertDateTimeBtn_Click(object sender, RoutedEventArgs e)
@@ -278,31 +281,14 @@ namespace FluentPad
             textBoxMain.Focus(FocusState.Programmatic);
         }
 
-        private async void AboutBtn_Click(object sender, RoutedEventArgs e)
+        private void AboutBtn_Click(object sender, RoutedEventArgs e)
         {
-            var messageBox = new MessageDialog(@"Developed by Makesh Vineeth
-Version 1.0
-Copyright © 2022
-All Rights Reserved.", "About Notepad");
-
-            await messageBox.ShowAsync();
+            helpMenu.ShowAbout();
         }
 
-        private async void ShorcutsMenuBtn_Click(object sender, RoutedEventArgs e)
+        private void ShorcutsMenuBtn_Click(object sender, RoutedEventArgs e)
         {
-            var messageBox = new MessageDialog(@"Alt - Show/Hide Menu
-Ctrl + O to open file
-Ctrl + S to save current file
-Ctrl + F to search for text
-Ctrl + H for replacing text
-Ctrl + G to search in Google
-Ctrl + I to insert date/time
-Ctrl + U for Upper Case
-Ctrl + L for Lower Case
-Ctrl + P for Calculating
-Ctrl + K for Statistics", "Shortcuts Guide");
-
-            await messageBox.ShowAsync();
+            helpMenu.ShowHelp();
         }
 
         private async void SaveCurrentBtn_Click(object sender, RoutedEventArgs e)
@@ -369,138 +355,14 @@ Ctrl + K for Statistics", "Shortcuts Guide");
             }
         }
 
-        private async void SearchTextBtn_Click(object sender, RoutedEventArgs e)
+        private void SearchTextBtn_Click(object sender, RoutedEventArgs e)
         {
-            string text = textBoxMain.Text;
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                var msgBox = new MessageDialog("No text found!", "Unable to search");
-                await msgBox.ShowAsync();
-                return;
-            }
-
-            text = text.ToLower();
-
-            string val = await ShowAddDialogAsync("Search for any text");
-            if (string.IsNullOrWhiteSpace(val)) return;
-            val = val.ToLower();
-            textBoxMain.Focus(FocusState.Programmatic);
-
-            if (text.Contains(val))
-            {
-                int indexStart = text.IndexOf(val);
-                textBoxMain.SelectionStart = indexStart;
-                textBoxMain.SelectionLength = val.Length;
-            }
-            else
-            {
-                textBoxMain.SelectionLength = 0;
-                textBoxMain.SelectionStart = 0;
-                var messageBox = new MessageDialog("Not found!", "Unable to find");
-                await messageBox.ShowAsync();
-            }
+            operations.SearchText(textBoxMain);
         }
 
-        public static async Task<string> ShowAddDialogAsync(string title)
+        private void ReplaceBtn_Click(object sender, RoutedEventArgs e)
         {
-            var inputTextBox = new TextBox { AcceptsReturn = false };
-            inputTextBox.VerticalAlignment = VerticalAlignment.Bottom;
-            var dialog = new ContentDialog
-            {
-                Content = inputTextBox,
-                Title = title,
-                IsSecondaryButtonEnabled = true,
-                PrimaryButtonText = "Ok",
-                SecondaryButtonText = "Cancel"
-            };
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-                return inputTextBox.Text;
-            else
-                return "";
-        }
-
-        private async void ReplaceBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(textBoxMain.Text))
-            {
-                var msgBox = new MessageDialog("No text found!", "Replace failed");
-                await msgBox.ShowAsync();
-                return;
-            }
-
-            var inputTextBoxFrom = new TextBox
-            {
-                AcceptsReturn = false,
-                VerticalAlignment = VerticalAlignment.Bottom,
-                PlaceholderText = "Enter old text...",
-                Margin = new Thickness(0, 0, 0, 10),
-            };
-
-            var inputTextBoxTo = new TextBox
-            {
-                AcceptsReturn = false,
-                VerticalAlignment = VerticalAlignment.Bottom,
-                PlaceholderText = "Enter new text...",
-                Margin = new Thickness(0, 0, 0, 10),
-            };
-
-            var caseInsensitive = new CheckBox
-            {
-                VerticalAlignment = VerticalAlignment.Bottom,
-                Content = "Case Insensitive",
-                IsChecked = false,
-                IsThreeState = false,
-            };
-
-            StackPanel stackPanel = new StackPanel();
-            stackPanel.Children.Add(inputTextBoxFrom);
-            stackPanel.Children.Add(inputTextBoxTo);
-            stackPanel.Children.Add(caseInsensitive);
-
-            var dialog = new ContentDialog
-            {
-                Content = stackPanel,
-                Title = "Enter text to replace for",
-                IsSecondaryButtonEnabled = true,
-                PrimaryButtonText = "Ok",
-                SecondaryButtonText = "Cancel"
-            };
-
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-            {
-                bool caseFlag = caseInsensitive.IsChecked ?? false;
-                string from = inputTextBoxFrom.Text;
-                string to = inputTextBoxTo.Text;
-
-                if (string.IsNullOrWhiteSpace(to) && string.IsNullOrWhiteSpace(from)) return;
-
-                string text = textBoxMain.Text;
-                StringComparison comparison = caseFlag ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
-
-                if (text.Contains(from, comparison))
-                {
-                    while (text.Contains(from, comparison))
-                    {
-                        text = text.Replace(from, to, comparison);
-                        textBoxMain.Text = text;
-                        var messageBox = new MessageDialog("Replaced!", "Success");
-                        await messageBox.ShowAsync();
-                        textBoxMain.Focus(FocusState.Programmatic);
-                        textBoxMain.SelectionLength = 0;
-                        textBoxMain.SelectionStart = 0;
-                        int index = text.IndexOf(to);
-                        textBoxMain.SelectionStart = index;
-                        textBoxMain.SelectionLength = 0;
-                    }
-                }
-                else
-                {
-                    textBoxMain.SelectionLength = 0;
-                    textBoxMain.SelectionStart = 0;
-                    var messageBox = new MessageDialog("Not found any instances to replace with!", "Error");
-                    await messageBox.ShowAsync();
-                }
-            }
+            operations.Replace(textBoxMain);
         }
 
         private void TextBoxMain_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
@@ -656,31 +518,9 @@ Ctrl + K for Statistics", "Shortcuts Guide");
             }
         }
 
-        private async void StatisticsBtn_Click(object sender, RoutedEventArgs e)
+        private void StatisticsBtn_Click(object sender, RoutedEventArgs e)
         {
-            string selectedText = textBoxMain.Text;
-            if (!string.IsNullOrWhiteSpace(selectedText))
-            {
-                int lines = Regex.Matches(selectedText, "\r", RegexOptions.Multiline).Count + 1;
-                char[] delimiters = new char[] { ' ', '\r', '\n' };
-                int words = selectedText.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).Length;
-                int charsNoSpaces = selectedText.Count(c => !char.IsWhiteSpace(c));
-                int paragraphs = Regex.Matches(selectedText, "[^\r\n]+((\r|\n|\r\n)[^\r\n]+)*").Count;
-                int specialCharacters = Regex.Matches(selectedText, "[~!@#$%^&*()_+{}:\"<>?]").Count;
-                int numbers = selectedText.Count(c => char.IsDigit(c));
-
-                string message = "Lines: " + lines + "\r" + "Words: " + words + "\r" + "Characters without spaces: " + charsNoSpaces + "\r" + "Characters with spaces: " + selectedText.Length
-                    + "\r" + "Paragraphs: " + paragraphs + "\r" + "Special Characters: " + specialCharacters
-                    + "\r" + "Digits: " + numbers + "\r\r\r" + "(Not all information that is shown above may be accurate)";
-
-                var msgBox = new MessageDialog(message, "Statistics");
-                await msgBox.ShowAsync();
-            }
-            else
-            {
-                var msgBox = new MessageDialog("No text found!", "Statistics");
-                await msgBox.ShowAsync();
-            }
+            miscellaneous.GetStatistics(textBoxMain);
         }
     }
 }
