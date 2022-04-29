@@ -23,9 +23,7 @@ namespace FluentPad
         private readonly Miscellaneous miscellaneous;
         private readonly HelpMenu helpMenu;
         private readonly ContextOptions contextOptions;
-
         private const string autoSavePref = "AutoSaveEnabled";
-
         private const string menuVisibilityPref = "menuVisibility";
 
 
@@ -42,8 +40,25 @@ namespace FluentPad
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 3);
 
+            ToggleMenuVisibility();
+            AutoSaveToggle();
+
+            UndoBtn.IsEnabled = false;
+            RedoBtn.IsEnabled = false;
+        }
+
+        private void Timer_Tick(object sender, object e)
+        {
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            if (autoSaveToggle.IsChecked && view.Title.EndsWith(pattern) && openedFile != null)
+                SaveCurrentBtn_Click(null, null);
+        }
+
+        private void ToggleMenuVisibility()
+        {
             ApplicationDataContainer dataContainer = ApplicationData.Current.LocalSettings;
             string showMenu = dataContainer.Values[menuVisibilityPref]?.ToString() ?? string.Empty;
+
             if (!string.IsNullOrWhiteSpace(showMenu) && showMenu.Contains("Visible"))
             {
                 gridTopMenu.Visibility = Visibility.Visible;
@@ -52,7 +67,11 @@ namespace FluentPad
             {
                 gridTopMenu.Visibility = Visibility.Collapsed;
             }
+        }
 
+        private void AutoSaveToggle()
+        {
+            ApplicationDataContainer dataContainer = ApplicationData.Current.LocalSettings;
             string autoSaveCheck = dataContainer.Values[autoSavePref]?.ToString() ?? string.Empty;
             if (!string.IsNullOrWhiteSpace(autoSaveCheck))
             {
@@ -66,16 +85,6 @@ namespace FluentPad
                     autoSaveToggle.IsChecked = false;
                 }
             }
-
-            UndoBtn.IsEnabled = false;
-            RedoBtn.IsEnabled = false;
-        }
-
-        private void Timer_Tick(object sender, object e)
-        {
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            if (autoSaveToggle.IsChecked && view.Title.EndsWith(pattern) && openedFile != null)
-                SaveCurrentBtn_Click(null, null);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -120,11 +129,8 @@ namespace FluentPad
         }
 
         private void FileMenuButton_Click(object sender, RoutedEventArgs e) => FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-
         private void OperationsBtn_Click(object sender, RoutedEventArgs e) => FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-
         private void MiscButton_Click(object sender, RoutedEventArgs e) => FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-
         private void HelpButton_Click(object sender, RoutedEventArgs e) => FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
 
         private async void OpenButton_Click(object sender, RoutedEventArgs e)
@@ -158,7 +164,6 @@ namespace FluentPad
         }
 
         private void FixAutoSelect() => textBoxMain.SelectionStart = 0;
-
         private void ExitButton_Click(object sender, RoutedEventArgs e) => helpMenu.ExitApp();
 
         private void NewButton_Click(object sender, RoutedEventArgs e)
@@ -256,6 +261,7 @@ namespace FluentPad
         private void TextBoxMain_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             bool isCtrlPressed = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down);
+
             if (e.Key == VirtualKey.Menu)
             {
                 ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
@@ -272,54 +278,31 @@ namespace FluentPad
                     e.Handled = true;
                 }
             }
-            else if (isCtrlPressed && e.Key == VirtualKey.O)
+            else if (isCtrlPressed)
             {
-                OpenButton_Click(sender, e);
-            }
-            else if (isCtrlPressed && e.Key == VirtualKey.S)
-            {
-                SaveCurrentBtn_Click(sender, e);
-            }
-            else if (isCtrlPressed && e.Key == VirtualKey.F)
-            {
-                SearchTextBtn_Click(sender, e);
-            }
-            else if (isCtrlPressed && e.Key == VirtualKey.H)
-            {
-                ReplaceBtn_Click(sender, e);
-            }
-            else if (isCtrlPressed && e.Key == VirtualKey.G)
-            {
-                SearchGoogleBtn_Click(sender, e);
-            }
-            else if (isCtrlPressed && e.Key == VirtualKey.I)
-            {
-                InsertDateTimeBtn_Click(sender, e);
-            }
-            else if (isCtrlPressed && e.Key == VirtualKey.U)
-            {
-                UppercaseBtn_Click(sender, e);
-            }
-            else if (isCtrlPressed && e.Key == VirtualKey.L)
-            {
-                LowercaseBtn_Click(sender, e);
-            }
-            else if (isCtrlPressed && e.Key == VirtualKey.P)
-            {
-                CalculateBtn_Click(sender, e);
-            }
-            else if (isCtrlPressed && e.Key == VirtualKey.K)
-            {
-                StatisticsBtn_Click(sender, e);
+                switch (e.Key)
+                {
+                    case VirtualKey.O: OpenButton_Click(sender, e); break;
+                    case VirtualKey.S: SaveCurrentBtn_Click(sender, e); break;
+                    case VirtualKey.F: SearchTextBtn_Click(sender, e); break;
+                    case VirtualKey.H: ReplaceBtn_Click(sender, e); break;
+                    case VirtualKey.G: SearchGoogleBtn_Click(sender, e); break;
+                    case VirtualKey.I: InsertDateTimeBtn_Click(sender, e); break;
+                    case VirtualKey.U: UppercaseBtn_Click(sender, e); break;
+                    case VirtualKey.L: LowercaseBtn_Click(sender, e); break;
+                    case VirtualKey.P: CalculateBtn_Click(sender, e); break;
+                    case VirtualKey.K: StatisticsBtn_Click(sender, e); break;
+                    default: break;
+                }
             }
         }
 
         private void TextBoxMain_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ApplicationView view = ApplicationView.GetForCurrentView();
             string text = textBoxMain.Text;
             int compareInt = string.CompareOrdinal(lastSavedText, text);
 
+            ApplicationView view = ApplicationView.GetForCurrentView();
             if (compareInt != 0)
             {
                 if (!view.Title.EndsWith(pattern))
@@ -330,23 +313,8 @@ namespace FluentPad
                 view.Title = view.Title.Replace(pattern, string.Empty);
             }
 
-            if (textBoxMain.CanUndo)
-            {
-                UndoBtn.IsEnabled = true;
-            }
-            else
-            {
-                UndoBtn.IsEnabled = false;
-            }
-
-            if (textBoxMain.CanRedo)
-            {
-                RedoBtn.IsEnabled = true;
-            }
-            else
-            {
-                RedoBtn.IsEnabled = false;
-            }
+            UndoBtn.IsEnabled = textBoxMain.CanUndo;
+            RedoBtn.IsEnabled = textBoxMain.CanRedo;
         }
 
         private void AutoSaveToggle_Click(object sender, RoutedEventArgs e)
