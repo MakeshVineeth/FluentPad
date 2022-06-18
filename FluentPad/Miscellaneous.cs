@@ -61,6 +61,7 @@ namespace FluentPad
                 {
                     textBoxMain.Focus(FocusState.Programmatic);
                     string text = textBoxMain.Text;
+                    text = text.Trim();
                     string pattern1 = "/*";
                     string pattern2 = "*/";
 
@@ -73,12 +74,27 @@ namespace FluentPad
                     }
 
                     pattern1 = "//";
-                    pattern2 = "\n";
+                    pattern2 = "\r";
+
                     start = text.IndexOf(pattern1);
 
                     while (start >= 0)
                     {
                         int end = text.IndexOf(pattern2, start);
+                        if (end < 0) break;
+                        text = text.Remove(start, end - start);
+                        start = text.IndexOf(pattern1);
+                    }
+
+                    pattern1 = "//";
+                    pattern2 = "\n";
+
+                    start = text.IndexOf(pattern1);
+
+                    while (start >= 0)
+                    {
+                        int end = text.IndexOf(pattern2, start);
+                        if (end < 0) break;
                         text = text.Remove(start, end - start);
                         start = text.IndexOf(pattern1);
                     }
@@ -96,6 +112,8 @@ namespace FluentPad
             }
             catch (Exception)
             {
+                // var msgBox = new MessageDialog(ex.Message);
+                // msgBox.ShowAsync();
             }
         }
 
