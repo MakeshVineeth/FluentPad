@@ -393,5 +393,9 @@ namespace FluentPad
         private void CalculateBtn_Click(object sender, RoutedEventArgs e) => contextOptions.Calculate();
         private void StatisticsBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.GetStatistics();
 
+        private void CleanCodeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            miscellaneous.CleanCode(textBoxMain);
+        }
     }
 }

@@ -113,6 +113,12 @@
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
+                            <MenuFlyoutItem x:Name="CleanCodeBtn" Text="Clean Code" Click="CleanCodeBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Repair"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
                             <MenuFlyoutItem x:Name="PasteClipboardBtn" Text="Paste from Clipboard" Click="PasteClipboardBtn_Click">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="Paste"/>

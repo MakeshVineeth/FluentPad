@@ -53,6 +53,52 @@ namespace FluentPad
             textBoxMain.SelectionLength = 0;
         }
 
+        public void CleanCode(TextBox textBoxMain)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(textBoxMain.Text))
+                {
+                    textBoxMain.Focus(FocusState.Programmatic);
+                    string text = textBoxMain.Text;
+                    string pattern1 = "/*";
+                    string pattern2 = "*/";
+
+                    int start = text.IndexOf(pattern1);
+                    while (start >= 0)
+                    {
+                        int end = text.IndexOf(pattern2);
+                        text = text.Remove(start, end - start + pattern1.Length);
+                        start = text.IndexOf(pattern1);
+                    }
+
+                    pattern1 = "//";
+                    pattern2 = "\n";
+                    start = text.IndexOf(pattern1);
+
+                    while (start >= 0)
+                    {
+                        int end = text.IndexOf(pattern2, start);
+                        text = text.Remove(start, end - start);
+                        start = text.IndexOf(pattern1);
+                    }
+
+                    text = text.Trim();
+                    text = text.Replace("class GFG", "class DSA");
+                    text = text.Replace("class GfG", "class DSA");
+                    text = text.Replace("  ", "\n");
+                    text = Regex.Replace(text, @"[\r\n]+", "\n");
+
+                    textBoxMain.Text = text;
+                    textBoxMain.SelectionStart = textBoxMain.Text.Length;
+                    textBoxMain.SelectionLength = 0;
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         public void RemoveSpaces(TextBox textBoxMain)
         {
             textBoxMain.Text = textBoxMain.Text.Trim();
