@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media;
 using Windows.UI;
 using Microsoft.Toolkit.Uwp.UI.Helpers;
+using Windows.UI.Core.Preview;
 
 namespace FluentPad
 {
@@ -59,6 +60,32 @@ namespace FluentPad
             // Force dark theme until light theme fixed.
             var root = (FrameworkElement)Window.Current.Content;
             root.RequestedTheme = ElementTheme.Dark;
+
+            SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += this.OnCloseRequest;
+        }
+
+        private void OnCloseRequest(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
+        {
+            onCloseEvents(e);
+        }
+
+        private async void onCloseEvents(SystemNavigationCloseRequestedPreviewEventArgs e)
+        {
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            if (view.Title.EndsWith(pattern))
+            {
+                e.Handled = true;
+                MessageDialog messageDialog = new MessageDialog("File is not saved. Do you still want to close this file?", "Prompt");
+                messageDialog.Commands.Add(new UICommand("Yes", null));
+                messageDialog.Commands.Add(new UICommand("No", null));
+                messageDialog.DefaultCommandIndex = 0;
+                messageDialog.CancelCommandIndex = 1;
+
+                if ((await messageDialog.ShowAsync()).Label == "Yes")
+                {
+                    helpMenu.ExitApp();
+                }
+            }
         }
 
         private void Listener_ThemeChanged(ThemeListener sender)
