@@ -55,6 +55,10 @@ namespace FluentPad
             {
                 FixTitleBar();
             }
+
+            // Force dark theme until light theme fixed.
+            var root = (FrameworkElement)Window.Current.Content;
+            root.RequestedTheme = ElementTheme.Dark;
         }
 
         private void Listener_ThemeChanged(ThemeListener sender)
