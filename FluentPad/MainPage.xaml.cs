@@ -10,6 +10,9 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Core;
 using System.IO;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media;
+using Windows.UI;
+using Microsoft.Toolkit.Uwp.UI.Helpers;
 
 namespace FluentPad
 {
@@ -45,6 +48,27 @@ namespace FluentPad
 
             UndoBtn.IsEnabled = false;
             RedoBtn.IsEnabled = false;
+
+            var listener = new ThemeListener();
+            listener.ThemeChanged += Listener_ThemeChanged;
+            if (ActualTheme == ElementTheme.Light)
+            {
+                FixTitleBar();
+            }
+        }
+
+        private void Listener_ThemeChanged(ThemeListener sender)
+        {
+            FixTitleBar();
+        }
+
+        private void FixTitleBar()
+        {
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            Brush brush = gridTopMenu.Background;
+            AcrylicBrush acrylicBrush = (AcrylicBrush)brush;
+            titleBar.BackgroundColor = acrylicBrush.TintColor;
+            titleBar.ButtonBackgroundColor = acrylicBrush.TintColor;
         }
 
         private void Timer_Tick(object sender, object e)
@@ -337,5 +361,6 @@ namespace FluentPad
         private void RedoBtn_Click(object sender, RoutedEventArgs e) => contextOptions.Redo();
         private void CalculateBtn_Click(object sender, RoutedEventArgs e) => contextOptions.Calculate();
         private void StatisticsBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.GetStatistics();
+
     }
 }
