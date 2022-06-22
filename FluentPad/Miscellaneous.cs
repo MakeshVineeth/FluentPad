@@ -99,6 +99,13 @@ namespace FluentPad
                         start = text.IndexOf(pattern1);
                     }
 
+                    // Remove last line comment.
+                    start = text.IndexOf(pattern1);
+                    if (start >= 0)
+                    {
+                        text = text.Remove(start);
+                    }
+
                     text = text.Trim();
                     text = text.Replace("class GFG", "class DSA");
                     text = text.Replace("class GfG", "class DSA");
