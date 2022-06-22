@@ -407,5 +407,10 @@ namespace FluentPad
         {
             miscellaneous.CleanCode(textBoxMain);
         }
+
+        private void OpenDirectUrlBtn_Click(object sender, RoutedEventArgs e)
+        {
+            contextOptions.OpenDirectUrl();
+        }
     }
 }

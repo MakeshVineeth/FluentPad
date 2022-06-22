@@ -46,14 +46,13 @@ namespace FluentPad
             }
         }
 
-        public async void GoogleSearch()
+        public async void GenericWebSearch(string endPoint)
         {
             try
             {
                 string text = textBoxMain.SelectedText.Trim();
                 if (string.IsNullOrWhiteSpace(text)) return;
-                string google = "https://www.google.com/search?q=";
-                string url = google + WebUtility.UrlEncode(text);
+                string url = endPoint + WebUtility.UrlEncode(text);
                 var urlObject = new Uri(url);
                 bool success = await Launcher.LaunchUriAsync(urlObject);
 
@@ -68,6 +67,18 @@ namespace FluentPad
                 var messageBox = new MessageDialog("Oops, an error has occurred: " + ex.Message, "ERROR");
                 _ = messageBox.ShowAsync();
             }
+        }
+
+        public void OpenDirectUrl()
+        {
+            string endPointUrl = "https://duckduckgo.com/?q=" + WebUtility.UrlEncode("\\");
+            GenericWebSearch(endPointUrl);
+        }
+
+        public void GoogleSearch()
+        {
+            string google = "https://www.google.com/search?q=";
+            GenericWebSearch(google);
         }
 
         public void PasteContent()
