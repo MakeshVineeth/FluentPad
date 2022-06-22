@@ -52,9 +52,16 @@ namespace FluentPad
             {
                 string text = textBoxMain.SelectedText.Trim();
                 if (string.IsNullOrWhiteSpace(text)) return;
-                string url = endPoint + WebUtility.UrlEncode(text);
-                var urlObject = new Uri(url);
-                bool success = await Launcher.LaunchUriAsync(urlObject);
+
+                bool result = Uri.TryCreate(text, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+                if (!result)
+                {
+                    string url = endPoint + WebUtility.UrlEncode(text);
+                    uriResult = new Uri(url);
+                }
+
+                bool success = await Launcher.LaunchUriAsync(uriResult);
 
                 if (!success)
                 {
