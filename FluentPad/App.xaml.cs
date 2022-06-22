@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -90,10 +91,19 @@ namespace FluentPad
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
             base.OnFileActivated(args);
-            var rootFrame = new Frame();
-            rootFrame.Navigate(typeof(MainPage), args);
-            Window.Current.Content = rootFrame;
-            Window.Current.Activate();
+
+            try
+            {
+                var rootFrame = new Frame();
+                rootFrame.Navigate(typeof(MainPage), args);
+                Window.Current.Content = rootFrame;
+                Window.Current.Activate();
+            }
+            catch (Exception)
+            {
+                var msgBox = new MessageDialog("Could not open the file.", "ERROR");
+                _ = msgBox.ShowAsync();
+            }
         }
     }
 }

@@ -150,16 +150,18 @@ namespace FluentPad
                 {
                     if (args.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
                     {
-                        var fileArgs = args as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
-                        var file = (StorageFile)fileArgs.Files[0];
-                        string strFilePath = file.Path;
-
-                        if (!string.IsNullOrWhiteSpace(strFilePath))
+                        if (args is Windows.ApplicationModel.Activation.FileActivatedEventArgs fileArgs && fileArgs.Files.Count > 0)
                         {
-                            openedFile = file;
-                            var appView = ApplicationView.GetForCurrentView();
-                            appView.Title = Path.GetFileName(strFilePath);
-                            LoadTextFromFile();
+                            var file = (StorageFile)fileArgs.Files[0];
+                            string strFilePath = file.Path;
+
+                            if (!string.IsNullOrWhiteSpace(strFilePath))
+                            {
+                                openedFile = file;
+                                var appView = ApplicationView.GetForCurrentView();
+                                appView.Title = Path.GetFileName(strFilePath);
+                                LoadTextFromFile();
+                            }
                         }
                     }
                 }
@@ -173,13 +175,21 @@ namespace FluentPad
 
         private async void LoadTextFromFile()
         {
-            string text = await FileIO.ReadTextAsync(openedFile);
-
-            if (!string.IsNullOrWhiteSpace(text))
+            try
             {
-                lastSavedText = text.Replace("\n", string.Empty);
-                textBoxMain.Text = text;
-                FixAutoSelect();
+                string text = await FileIO.ReadTextAsync(openedFile);
+
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    lastSavedText = text.Replace("\n", string.Empty);
+                    textBoxMain.Text = text;
+                    FixAutoSelect();
+                }
+            }
+            catch (Exception)
+            {
+                var msgBox = new MessageDialog("Error reading the file.", "ERROR");
+                _ = msgBox.ShowAsync();
             }
         }
 
