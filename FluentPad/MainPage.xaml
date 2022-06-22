@@ -23,7 +23,7 @@
                     <AppBarButton x:Name="PasteButton" Label="Paste" Icon="Paste" Click="PasteButton_Click"/>
                     <AppBarButton x:Name="DeleteButton" Label="Delete" Icon="Delete" Click="DeleteButton_Click"/>
                     <AppBarButton x:Name="SearchGoogleBtn" Label="Search in Google" Icon="Find" Click="SearchGoogleBtn_Click"/>
-                    <AppBarButton x:Name="OpenDirectUrlBtn" Label="Open First URL" Icon="PreviewLink" Click="OpenDirectUrlBtn_Click"/>
+                    <AppBarButton x:Name="OpenDirectUrlBtn" Label="Open First URL" Icon="Link" Click="OpenDirectUrlBtn_Click"/>
                     <AppBarButton x:Name="CalculateBtn" Label="Calculate" Icon="Calculator" Click="CalculateBtn_Click"/>
                     <AppBarButton x:Name="UppercaseBtn" Label="Upper case" Icon="FontIncrease" Click="UppercaseBtn_Click"/>
                     <AppBarButton x:Name="LowercaseBtn" Label="Lower case" Icon="FontDecrease" Click="LowercaseBtn_Click"/>
