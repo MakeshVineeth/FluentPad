@@ -66,10 +66,10 @@ namespace FluentPad
 
         private void OnCloseRequest(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
         {
-            onCloseEvents(e);
+            OnCloseEvents(e);
         }
 
-        private async void onCloseEvents(SystemNavigationCloseRequestedPreviewEventArgs e)
+        private async void OnCloseEvents(SystemNavigationCloseRequestedPreviewEventArgs e)
         {
             ApplicationView view = ApplicationView.GetForCurrentView();
             if (view.Title.EndsWith(pattern))

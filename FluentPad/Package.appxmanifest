@@ -7,56 +7,57 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap mp rescap">
 
-  <Identity
-    Name="507a42cc-c1dd-49ec-b7c1-afaef1b60b26"
-    Publisher="CN=makeshvineeth"
-    Version="1.0.3.0" />
+	<Identity
+	  Name="507a42cc-c1dd-49ec-b7c1-afaef1b60b26"
+	  Publisher="CN=makeshvineeth"
+	  Version="1.0.3.0" />
 
-  <mp:PhoneIdentity PhoneProductId="507a42cc-c1dd-49ec-b7c1-afaef1b60b26" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<mp:PhoneIdentity PhoneProductId="507a42cc-c1dd-49ec-b7c1-afaef1b60b26" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
-  <Properties>
-    <DisplayName>FluentPad</DisplayName>
-    <PublisherDisplayName>makes</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
-  </Properties>
+	<Properties>
+		<DisplayName>FluentPad</DisplayName>
+		<PublisherDisplayName>makes</PublisherDisplayName>
+		<Logo>Assets\StoreLogo.png</Logo>
+	</Properties>
 
-  <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
-  </Dependencies>
+	<Dependencies>
+		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+	</Dependencies>
 
-  <Resources>
-    <Resource Language="x-generate"/>
-  </Resources>
+	<Resources>
+		<Resource Language="x-generate"/>
+	</Resources>
 
-  <Applications>
-    <Application Id="App"
-      Executable="$targetnametoken$.exe"
-      EntryPoint="FluentPad.App">
-      <uap:VisualElements
-        DisplayName="Fluent Pad"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="FluentPad"
-        BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
-      </uap:VisualElements>
-      <Extensions>
-        <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="txt">
-            <uap:SupportedFileTypes>
-              <uap:FileType>.txt</uap:FileType>
-            </uap:SupportedFileTypes>
-          </uap:FileTypeAssociation>
-        </uap:Extension>
-      </Extensions>
-    </Application>
-  </Applications>
+	<Applications>
+		<Application Id="App"
+		  Executable="$targetnametoken$.exe"
+		  EntryPoint="FluentPad.App">
+			<uap:VisualElements
+			  DisplayName="Fluent Pad"
+			  Square150x150Logo="Assets\Square150x150Logo.png"
+			  Square44x44Logo="Assets\Square44x44Logo.png"
+			  Description="FluentPad"
+			  BackgroundColor="transparent">
+				<uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
+				<uap:SplashScreen Image="Assets\SplashScreen.png" />
+			</uap:VisualElements>
+			<Extensions>
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="txt">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.txt</uap:FileType>
+							<uap:FileType>.cs</uap:FileType>
+						</uap:SupportedFileTypes>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+			</Extensions>
+		</Application>
+	</Applications>
 
-  <Capabilities>
-	<rescap:Capability Name="broadFileSystemAccess"/>
-    <uap:Capability Name="removableStorage"/>
-	<Capability Name="internetClient" />
-	<rescap:Capability Name="confirmAppClose"/>
-  </Capabilities>
+	<Capabilities>
+		<rescap:Capability Name="broadFileSystemAccess"/>
+		<rescap:Capability Name="confirmAppClose"/>
+		<uap:Capability Name="removableStorage"/>
+		<Capability Name="internetClient" />
+	</Capabilities>
 </Package>
