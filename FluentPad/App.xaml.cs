@@ -90,13 +90,20 @@ namespace FluentPad
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
-            base.OnFileActivated(args);
-
             try
             {
-                var rootFrame = new Frame();
-                rootFrame.Navigate(typeof(MainPage), args);
-                Window.Current.Content = rootFrame;
+                if (!(Window.Current.Content is Frame rootFrame))
+                {
+                    rootFrame = new Frame();
+                    rootFrame.NavigationFailed += OnNavigationFailed;
+                    Window.Current.Content = rootFrame;
+                }
+
+                if (rootFrame.Content == null)
+                {
+                    rootFrame.Navigate(typeof(MainPage), args);
+                }
+
                 Window.Current.Activate();
             }
             catch (Exception)
