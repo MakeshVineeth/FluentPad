@@ -47,6 +47,7 @@
 						<uap:SupportedFileTypes>
 							<uap:FileType>.txt</uap:FileType>
 							<uap:FileType>.cs</uap:FileType>
+							<uap:FileType>.log</uap:FileType>
 						</uap:SupportedFileTypes>
 					</uap:FileTypeAssociation>
 				</uap:Extension>
