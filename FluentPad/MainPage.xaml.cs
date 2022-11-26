@@ -181,8 +181,9 @@ namespace FluentPad
 
                 if (!string.IsNullOrWhiteSpace(text))
                 {
-                    lastSavedText = text.Replace("\n", string.Empty);
                     textBoxMain.Text = text;
+                    lastSavedText = textBoxMain.Text;
+
                     FixAutoSelect();
                 }
             }
@@ -215,8 +216,8 @@ namespace FluentPad
                     string text = await FileIO.ReadTextAsync(file);
                     if (!string.IsNullOrWhiteSpace(text))
                     {
-                        lastSavedText = text.Replace("\n", string.Empty); // TextBox using \r as newlines instead of \n.
                         textBoxMain.Text = text;
+                        lastSavedText = textBoxMain.Text;
                         FixAutoSelect();
                     }
                 }
@@ -276,7 +277,7 @@ namespace FluentPad
                 if (openedFile == null) return;
 
                 string text = textBoxMain.Text;
-                lastSavedText = text.Replace("\n", string.Empty); // TextBox using \r as newlines instead of \n.
+                lastSavedText = text;
                 ApplicationView view = ApplicationView.GetForCurrentView();
 
                 if (view.Title.EndsWith(pattern))
