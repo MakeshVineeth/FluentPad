@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Windows.Storage;
-using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.System;
@@ -11,7 +10,6 @@ using Windows.UI.Core;
 using System.IO;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media;
-using Windows.UI;
 using Microsoft.Toolkit.Uwp.UI.Helpers;
 using Windows.UI.Core.Preview;
 
@@ -159,8 +157,13 @@ namespace FluentPad
             }
             catch (Exception ex)
             {
-                var msgBox = new MessageDialog("Error: " + ex.Message, "ERROR");
-                _ = msgBox.ShowAsync();
+                ContentDialog contentDialog = new ContentDialog
+                {
+                    Title = "ERROR",
+                    Content = "Error: " + ex.Message,
+                };
+
+                _ = contentDialog.ShowAsync();
             }
         }
 
@@ -180,7 +183,7 @@ namespace FluentPad
             }
             catch (Exception)
             {
-                var msgBox = new MessageDialog("Error reading the file.", "ERROR");
+                var msgBox = new ContentDialog { Content = "Error reading the file.", Title = "ERROR" };
                 _ = msgBox.ShowAsync();
             }
         }
@@ -215,7 +218,7 @@ namespace FluentPad
             }
             catch (Exception)
             {
-                var messageBox = new MessageDialog("Unable to load file.", "ERROR");
+                var messageBox = new ContentDialog { Content = "Unable to load file.", Title = "ERROR" };
                 await messageBox.ShowAsync();
             }
         }
@@ -279,7 +282,7 @@ namespace FluentPad
             }
             catch (Exception)
             {
-                var messageBox = new MessageDialog("Error has occurred.", "ERROR");
+                var messageBox = new ContentDialog { Content = "Error has occurred.", Title = "ERROR" };
                 await messageBox.ShowAsync();
             }
         }
@@ -301,13 +304,17 @@ namespace FluentPad
                     openedFile = file;
                     ApplicationView view = ApplicationView.GetForCurrentView();
                     view.Title = openedFile.DisplayName;
-                    var messageBox = new MessageDialog("Saved!", "Success");
+                    var messageBox = new ContentDialog { Content = "Saved!", Title = "Success" };
                     await messageBox.ShowAsync();
                 }
             }
             catch (Exception)
             {
-                var messageBox = new MessageDialog("Error has occurred.", "ERROR");
+                var messageBox = new ContentDialog
+                {
+                    Content = "Error has occurred.",
+                    Title = "ERROR"
+                };
                 await messageBox.ShowAsync();
             }
         }

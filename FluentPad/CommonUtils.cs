@@ -9,8 +9,12 @@ namespace FluentPad
     {
         public static async Task<string> ShowAddDialogAsync(string title)
         {
-            var inputTextBox = new TextBox { AcceptsReturn = false };
-            inputTextBox.VerticalAlignment = VerticalAlignment.Bottom;
+            var inputTextBox = new TextBox
+            {
+                AcceptsReturn = false,
+                VerticalAlignment = VerticalAlignment.Bottom
+            };
+
             var dialog = new ContentDialog
             {
                 Content = inputTextBox,

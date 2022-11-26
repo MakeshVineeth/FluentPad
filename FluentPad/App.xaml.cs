@@ -123,13 +123,16 @@ namespace FluentPad
 
         private async Task<bool> ShowMessageAsync()
         {
-            MessageDialog messageDialog = new MessageDialog("File is not saved. Do you still want to close this file and open another file?", "Prompt");
-            messageDialog.Commands.Add(new UICommand("Yes", null));
-            messageDialog.Commands.Add(new UICommand("No", null));
-            messageDialog.DefaultCommandIndex = 0;
-            messageDialog.CancelCommandIndex = 1;
+            ContentDialog confirmFileDialog = new ContentDialog
+            {
+                Title = "Open new file?",
+                Content = "File is not saved. Do you still want to close this file and open another file?",
+                PrimaryButtonText = "Yes",
+                CloseButtonText = "No"
+            };
 
-            if ((await messageDialog.ShowAsync()).Label == "Yes")
+
+            if ((await confirmFileDialog.ShowAsync()) == ContentDialogResult.Primary)
             {
                 return true;
             }

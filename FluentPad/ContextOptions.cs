@@ -29,19 +29,19 @@ namespace FluentPad
                     var result = new DataTable().Compute(expression, null);
                     if (result == DBNull.Value)
                     {
-                        var msgBox = new MessageDialog("Unable to calculate the expression!", "ERROR");
+                        var msgBox = new ContentDialog { Content = "Unable to calculate the expression!", Title = "ERROR" };
                         await msgBox.ShowAsync();
                     }
                     else
                     {
-                        var msgBox = new MessageDialog(result.ToString(), "ANSWER");
+                        var msgBox = new ContentDialog { Content = result.ToString(), Title = "ANSWER" };
                         await msgBox.ShowAsync();
                     }
                 }
             }
             catch (Exception)
             {
-                var msgBox = new MessageDialog("Error has occurred.", "ERROR");
+                var msgBox = new ContentDialog { Content = "Error has occurred.", Title = "ERROR" };
                 await msgBox.ShowAsync();
             }
         }
@@ -65,13 +65,13 @@ namespace FluentPad
 
                 if (!success)
                 {
-                    var messageBox = new MessageDialog("Oops, unable to search.", "FAILED TO OPEN URL");
+                    var messageBox = new ContentDialog { Content = "Oops, unable to search.", Title = "FAILED TO OPEN URL" };
                     _ = messageBox.ShowAsync();
                 }
             }
             catch (Exception ex)
             {
-                var messageBox = new MessageDialog("Oops, an error has occurred: " + ex.Message, "ERROR");
+                var messageBox = new ContentDialog { Content = "Oops, an error has occurred: " + ex.Message, Title = "ERROR" };
                 _ = messageBox.ShowAsync();
             }
         }

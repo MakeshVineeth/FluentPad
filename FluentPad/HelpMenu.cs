@@ -1,6 +1,6 @@
 ﻿using System;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace FluentPad
 {
@@ -8,7 +8,7 @@ namespace FluentPad
     {
         public async void ShowHelp()
         {
-            var messageBox = new MessageDialog(@"Alt - Show/Hide Menu
+            var messageBox = new ContentDialog { Content = @"Alt - Show/Hide Menu
 Ctrl + O to open file
 Ctrl + S to save current file
 Ctrl + F to search for text
@@ -18,17 +18,17 @@ Ctrl + I to insert date/time
 Ctrl + U for Upper Case
 Ctrl + L for Lower Case
 Ctrl + P for Calculating
-Ctrl + K for Statistics", "Shortcuts Guide");
+Ctrl + K for Statistics", Title = "Shortcuts Guide" };
 
             await messageBox.ShowAsync();
         }
 
         public async void ShowAbout()
         {
-            var messageBox = new MessageDialog(@"Developed by Makesh Vineeth
+            var messageBox = new ContentDialog { Content = @"Developed by Makesh Vineeth
 Version 1.0
 Copyright © 2022
-All Rights Reserved.", "About Notepad");
+All Rights Reserved.", Title = "About Notepad" };
 
             await messageBox.ShowAsync();
         }
