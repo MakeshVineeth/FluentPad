@@ -92,18 +92,10 @@ namespace FluentPad
         {
             try
             {
-                if (!(Window.Current.Content is Frame rootFrame))
-                {
-                    rootFrame = new Frame();
-                    rootFrame.NavigationFailed += OnNavigationFailed;
-                    Window.Current.Content = rootFrame;
-                }
-
-                if (rootFrame.Content == null)
-                {
-                    rootFrame.Navigate(typeof(MainPage), args);
-                }
-
+                Frame rootFrame = new Frame();
+                rootFrame.NavigationFailed += OnNavigationFailed;
+                Window.Current.Content = rootFrame;
+                rootFrame.Navigate(typeof(MainPage), args);
                 Window.Current.Activate();
             }
             catch (Exception)
