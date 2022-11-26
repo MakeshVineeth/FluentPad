@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -33,12 +32,12 @@ namespace FluentPad
                     + "\r" + "Paragraphs: " + paragraphs + "\r" + "Special Characters: " + specialCharacters
                     + "\r" + "Digits: " + numbers + "\r\r\r" + "(Not all information that is shown above may be accurate)";
 
-                var msgBox = new MessageDialog(message, "Statistics");
+                var msgBox = new ContentDialog { Content = message, Title = "Statistics", CloseButtonText = "Ok" };
                 await msgBox.ShowAsync();
             }
             else
             {
-                var msgBox = new MessageDialog("No text found!", "Statistics");
+                var msgBox = new ContentDialog { Content = "No text found!", Title = "Statistics", CloseButtonText = "Ok" };
                 await msgBox.ShowAsync();
             }
         }

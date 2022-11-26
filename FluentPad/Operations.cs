@@ -1,5 +1,4 @@
 ﻿using System;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -20,7 +19,7 @@ namespace FluentPad
         {
             if (string.IsNullOrWhiteSpace(textBoxMain.Text))
             {
-                var msgBox = new MessageDialog("No text found!", "Replace failed");
+                var msgBox = new ContentDialog { Content = "No text found!", Title = "Replace failed", CloseButtonText = "Ok" };
                 await msgBox.ShowAsync();
                 return;
             }
@@ -80,7 +79,7 @@ namespace FluentPad
                     {
                         text = text.Replace(from, to, comparison);
                         textBoxMain.Text = text;
-                        var messageBox = new MessageDialog("Replaced!", "Success");
+                        var messageBox = new ContentDialog { Content = "Replaced!", Title = "Success", CloseButtonText = "Ok" };
                         await messageBox.ShowAsync();
                         textBoxMain.Focus(FocusState.Programmatic);
                         int index = text.IndexOf(to);
@@ -92,7 +91,7 @@ namespace FluentPad
                 {
                     textBoxMain.SelectionLength = 0;
                     textBoxMain.SelectionStart = 0;
-                    var messageBox = new MessageDialog("Not found any instances to replace with!", "Error");
+                    var messageBox = new ContentDialog { Content = "Not found any instances to replace with!", Title = "Error", CloseButtonText = "Ok" };
                     await messageBox.ShowAsync();
                 }
             }
@@ -100,13 +99,15 @@ namespace FluentPad
 
         public async void CloseApplicationPrompt()
         {
-            MessageDialog messageDialog = new MessageDialog("File is not saved. Do you still want to close this file?", "Prompt");
-            messageDialog.Commands.Add(new UICommand("Yes", null));
-            messageDialog.Commands.Add(new UICommand("No", null));
-            messageDialog.DefaultCommandIndex = 0;
-            messageDialog.CancelCommandIndex = 1;
+            ContentDialog messageDialog = new ContentDialog
+            {
+                Content = "File is not saved. Do you still want to close this file?",
+                Title = "Prompt",
+                PrimaryButtonText = "Yes",
+                CloseButtonText = "No"
+            };
 
-            if ((await messageDialog.ShowAsync()).Label == "Yes")
+            if ((await messageDialog.ShowAsync()) == ContentDialogResult.Primary)
             {
                 helpMenu.ExitApp();
             }
@@ -117,7 +118,7 @@ namespace FluentPad
             string text = textBoxMain.Text;
             if (string.IsNullOrWhiteSpace(text))
             {
-                var msgBox = new MessageDialog("No text found!", "Unable to search");
+                var msgBox = new ContentDialog { Content = "No text found!", Title = "Unable to search", CloseButtonText = "Ok" };
                 await msgBox.ShowAsync();
                 return;
             }
@@ -139,7 +140,7 @@ namespace FluentPad
             {
                 textBoxMain.SelectionLength = 0;
                 textBoxMain.SelectionStart = 0;
-                var messageBox = new MessageDialog("Not found!", "Unable to find");
+                var messageBox = new ContentDialog { Content = "Not found!", Title = "Unable to find", CloseButtonText = "Ok" };
                 await messageBox.ShowAsync();
             }
         }

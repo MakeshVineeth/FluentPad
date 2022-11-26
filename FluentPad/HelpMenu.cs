@@ -18,7 +18,7 @@ Ctrl + I to insert date/time
 Ctrl + U for Upper Case
 Ctrl + L for Lower Case
 Ctrl + P for Calculating
-Ctrl + K for Statistics", Title = "Shortcuts Guide" };
+Ctrl + K for Statistics", Title = "Shortcuts Guide", CloseButtonText = "Ok" };
 
             await messageBox.ShowAsync();
         }
