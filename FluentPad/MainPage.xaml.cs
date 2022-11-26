@@ -21,7 +21,7 @@ namespace FluentPad
     {
         private StorageFile openedFile = null;
         private string lastSavedText = string.Empty;
-        private const string pattern = " *";
+        public static string pattern = " *";
         private readonly DispatcherTimer timer;
         private readonly Operations operations;
         private readonly Miscellaneous miscellaneous;
@@ -69,22 +69,13 @@ namespace FluentPad
             OnCloseEvents(e);
         }
 
-        private async void OnCloseEvents(SystemNavigationCloseRequestedPreviewEventArgs e)
+        private void OnCloseEvents(SystemNavigationCloseRequestedPreviewEventArgs e)
         {
             ApplicationView view = ApplicationView.GetForCurrentView();
             if (view.Title.EndsWith(pattern))
             {
                 e.Handled = true;
-                MessageDialog messageDialog = new MessageDialog("File is not saved. Do you still want to close this file?", "Prompt");
-                messageDialog.Commands.Add(new UICommand("Yes", null));
-                messageDialog.Commands.Add(new UICommand("No", null));
-                messageDialog.DefaultCommandIndex = 0;
-                messageDialog.CancelCommandIndex = 1;
-
-                if ((await messageDialog.ShowAsync()).Label == "Yes")
-                {
-                    helpMenu.ExitApp();
-                }
+                operations.CloseApplicationPrompt();
             }
         }
 

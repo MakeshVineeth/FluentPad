@@ -8,9 +8,11 @@ namespace FluentPad
     internal class Operations
     {
         private readonly TextBox textBoxMain;
+        private readonly HelpMenu helpMenu;
 
         public Operations(TextBox textBoxMain)
         {
+            helpMenu = new HelpMenu();
             this.textBoxMain = textBoxMain;
         }
 
@@ -93,6 +95,20 @@ namespace FluentPad
                     var messageBox = new MessageDialog("Not found any instances to replace with!", "Error");
                     await messageBox.ShowAsync();
                 }
+            }
+        }
+
+        public async void CloseApplicationPrompt()
+        {
+            MessageDialog messageDialog = new MessageDialog("File is not saved. Do you still want to close this file?", "Prompt");
+            messageDialog.Commands.Add(new UICommand("Yes", null));
+            messageDialog.Commands.Add(new UICommand("No", null));
+            messageDialog.DefaultCommandIndex = 0;
+            messageDialog.CancelCommandIndex = 1;
+
+            if ((await messageDialog.ShowAsync()).Label == "Yes")
+            {
+                helpMenu.ExitApp();
             }
         }
 

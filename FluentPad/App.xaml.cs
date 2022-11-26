@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -17,6 +19,8 @@ namespace FluentPad
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
+        /// 
+
         public App()
         {
             this.InitializeComponent();
@@ -88,15 +92,56 @@ namespace FluentPad
             deferral.Complete();
         }
 
+        private void LoadContent(FileActivatedEventArgs args)
+        {
+            Frame rootFrame = new Frame();
+            rootFrame.NavigationFailed += OnNavigationFailed;
+            Window.Current.Content = rootFrame;
+            rootFrame.Navigate(typeof(MainPage), args);
+            Window.Current.Activate();
+        }
+
+        private void CheckUnsaved(FileActivatedEventArgs args)
+        {
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            if (view.Title.EndsWith(MainPage.pattern))
+            {
+                _ = ShowMessageAsync().ContinueWith((obj) =>
+                {
+                    if (obj.IsCompleted && obj.Result == true)
+                    {
+                        LoadContent(args);
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            }
+            else
+            {
+                LoadContent(args);
+            }
+        }
+
+        private async Task<bool> ShowMessageAsync()
+        {
+            MessageDialog messageDialog = new MessageDialog("File is not saved. Do you still want to close this file and open another file?", "Prompt");
+            messageDialog.Commands.Add(new UICommand("Yes", null));
+            messageDialog.Commands.Add(new UICommand("No", null));
+            messageDialog.DefaultCommandIndex = 0;
+            messageDialog.CancelCommandIndex = 1;
+
+            if ((await messageDialog.ShowAsync()).Label == "Yes")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
             try
             {
-                Frame rootFrame = new Frame();
-                rootFrame.NavigationFailed += OnNavigationFailed;
-                Window.Current.Content = rootFrame;
-                rootFrame.Navigate(typeof(MainPage), args);
-                Window.Current.Activate();
+                CheckUnsaved(args);
             }
             catch (Exception)
             {
