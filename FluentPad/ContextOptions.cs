@@ -3,7 +3,6 @@ using System.Data;
 using System.Globalization;
 using System.Net;
 using Windows.System;
-using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 namespace FluentPad
@@ -29,19 +28,19 @@ namespace FluentPad
                     var result = new DataTable().Compute(expression, null);
                     if (result == DBNull.Value)
                     {
-                        var msgBox = new ContentDialog { Content = "Unable to calculate the expression!", Title = "ERROR" };
+                        var msgBox = new ContentDialog { Content = "Unable to calculate the expression!", Title = "ERROR", CloseButtonText = "Ok" };
                         await msgBox.ShowAsync();
                     }
                     else
                     {
-                        var msgBox = new ContentDialog { Content = result.ToString(), Title = "ANSWER" };
+                        var msgBox = new ContentDialog { Content = result.ToString(), Title = "ANSWER", CloseButtonText = "Ok" };
                         await msgBox.ShowAsync();
                     }
                 }
             }
             catch (Exception)
             {
-                var msgBox = new ContentDialog { Content = "Error has occurred.", Title = "ERROR" };
+                var msgBox = new ContentDialog { Content = "Error has occurred.", Title = "ERROR", CloseButtonText = "Ok" };
                 await msgBox.ShowAsync();
             }
         }
@@ -65,13 +64,13 @@ namespace FluentPad
 
                 if (!success)
                 {
-                    var messageBox = new ContentDialog { Content = "Oops, unable to search.", Title = "FAILED TO OPEN URL" };
+                    var messageBox = new ContentDialog { Content = "Oops, unable to search.", Title = "FAILED TO OPEN URL", CloseButtonText = "Ok" };
                     _ = messageBox.ShowAsync();
                 }
             }
             catch (Exception ex)
             {
-                var messageBox = new ContentDialog { Content = "Oops, an error has occurred: " + ex.Message, Title = "ERROR" };
+                var messageBox = new ContentDialog { Content = "Oops, an error has occurred: " + ex.Message, Title = "ERROR", CloseButtonText = "Ok" };
                 _ = messageBox.ShowAsync();
             }
         }

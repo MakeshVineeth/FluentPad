@@ -28,7 +28,7 @@ Ctrl + K for Statistics", Title = "Shortcuts Guide" };
             var messageBox = new ContentDialog { Content = @"Developed by Makesh Vineeth
 Version 1.0
 Copyright © 2022
-All Rights Reserved.", Title = "About Notepad" };
+All Rights Reserved.", Title = "About Notepad", CloseButtonText = "Ok" };
 
             await messageBox.ShowAsync();
         }
