@@ -52,16 +52,7 @@ namespace FluentPad
             stackPanel.Children.Add(inputTextBoxTo);
             stackPanel.Children.Add(caseInsensitive);
 
-            var dialog = new ContentDialog
-            {
-                Content = stackPanel,
-                Title = "Enter text to replace for",
-                IsSecondaryButtonEnabled = true,
-                PrimaryButtonText = "Ok",
-                SecondaryButtonText = "Cancel"
-            };
-
-            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            if (await CommonUtils.ShowPromptAsync(stackPanel, "Enter text to replace for"))
             {
                 bool caseFlag = caseInsensitive.IsChecked ?? false;
                 string from = inputTextBoxFrom.Text;
@@ -96,15 +87,7 @@ namespace FluentPad
 
         public async void CloseApplicationPrompt()
         {
-            ContentDialog messageDialog = new ContentDialog
-            {
-                Content = "File is not saved. Do you still want to close this file?",
-                Title = "Prompt",
-                PrimaryButtonText = "Yes",
-                CloseButtonText = "No"
-            };
-
-            if ((await messageDialog.ShowAsync()) == ContentDialogResult.Primary)
+            if (await CommonUtils.ShowPromptAsync("File is not saved. Do you still want to close this file?", "Prompt"))
             {
                 helpMenu.ExitApp();
             }
@@ -121,7 +104,7 @@ namespace FluentPad
 
             text = text.ToLower();
 
-            string val = await CommonUtils.ShowAddDialogAsync("Search for any text");
+            string val = await CommonUtils.ShowTextPromptAsync("Search for any text");
             if (string.IsNullOrWhiteSpace(val)) return;
             val = val.ToLower();
             textBoxMain.Focus(FocusState.Programmatic);

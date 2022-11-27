@@ -7,7 +7,7 @@ namespace FluentPad
 {
     internal class CommonUtils
     {
-        public static async Task<string> ShowAddDialogAsync(string title)
+        public static async Task<string> ShowTextPromptAsync(string title)
         {
             var inputTextBox = new TextBox
             {
@@ -39,6 +39,25 @@ namespace FluentPad
             };
 
             _ = contentDialog.ShowAsync();
+        }
+
+        public static async Task<bool> ShowPromptAsync(object content, string title)
+        {
+            ContentDialog confirmFileDialog = new ContentDialog
+            {
+                Title = title,
+                Content = content,
+                PrimaryButtonText = "Yes",
+                IsSecondaryButtonEnabled = true,
+                CloseButtonText = "No"
+            };
+
+            if ((await confirmFileDialog.ShowAsync()) == ContentDialogResult.Primary)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

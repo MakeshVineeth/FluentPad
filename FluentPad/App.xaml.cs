@@ -106,7 +106,7 @@ namespace FluentPad
             ApplicationView view = ApplicationView.GetForCurrentView();
             if (view.Title.EndsWith(MainPage.pattern))
             {
-                _ = ShowMessageAsync().ContinueWith((obj) =>
+                _ = CommonUtils.ShowPromptAsync("File is not saved. Do you still want to close this file and open another file?", "Open new file?").ContinueWith((obj) =>
                 {
                     if (obj.IsCompleted && obj.Result == true)
                     {
@@ -119,24 +119,6 @@ namespace FluentPad
             {
                 LoadContent(args);
             }
-        }
-
-        private async Task<bool> ShowMessageAsync()
-        {
-            ContentDialog confirmFileDialog = new ContentDialog
-            {
-                Title = "Open new file?",
-                Content = "File is not saved. Do you still want to close this file and open another file?",
-                PrimaryButtonText = "Yes",
-                CloseButtonText = "No"
-            };
-
-            if ((await confirmFileDialog.ShowAsync()) == ContentDialogResult.Primary)
-            {
-                return true;
-            }
-
-            return false;
         }
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
