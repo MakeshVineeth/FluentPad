@@ -19,8 +19,7 @@ namespace FluentPad
         {
             if (string.IsNullOrWhiteSpace(textBoxMain.Text))
             {
-                var msgBox = new ContentDialog { Content = "No text found!", Title = "Replace failed", CloseButtonText = "Ok" };
-                await msgBox.ShowAsync();
+                CommonUtils.ShowDialog("No text found!", "Replace failed");
                 return;
             }
 
@@ -79,8 +78,7 @@ namespace FluentPad
                     {
                         text = text.Replace(from, to, comparison);
                         textBoxMain.Text = text;
-                        var messageBox = new ContentDialog { Content = "Replaced!", Title = "Success", CloseButtonText = "Ok" };
-                        await messageBox.ShowAsync();
+                        CommonUtils.ShowDialog("Replaced!", "Success");
                         textBoxMain.Focus(FocusState.Programmatic);
                         int index = text.IndexOf(to);
                         textBoxMain.SelectionStart = index;
@@ -91,8 +89,7 @@ namespace FluentPad
                 {
                     textBoxMain.SelectionLength = 0;
                     textBoxMain.SelectionStart = 0;
-                    var messageBox = new ContentDialog { Content = "Not found any instances to replace with!", Title = "Error", CloseButtonText = "Ok" };
-                    await messageBox.ShowAsync();
+                    CommonUtils.ShowDialog("Not found any instances to replace with!", "Error");
                 }
             }
         }
@@ -118,8 +115,7 @@ namespace FluentPad
             string text = textBoxMain.Text;
             if (string.IsNullOrWhiteSpace(text))
             {
-                var msgBox = new ContentDialog { Content = "No text found!", Title = "Unable to search", CloseButtonText = "Ok" };
-                await msgBox.ShowAsync();
+                CommonUtils.ShowDialog("No text found!", "Unable to search");
                 return;
             }
 
@@ -140,8 +136,7 @@ namespace FluentPad
             {
                 textBoxMain.SelectionLength = 0;
                 textBoxMain.SelectionStart = 0;
-                var messageBox = new ContentDialog { Content = "Not found!", Title = "Unable to find", CloseButtonText = "Ok" };
-                await messageBox.ShowAsync();
+                CommonUtils.ShowDialog("Not found!", "Unable to find");
             }
         }
 

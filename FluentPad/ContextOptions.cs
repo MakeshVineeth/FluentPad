@@ -16,7 +16,7 @@ namespace FluentPad
             this.textBoxMain = textBoxMain;
         }
 
-        public async void Calculate()
+        public void Calculate()
         {
             try
             {
@@ -28,20 +28,17 @@ namespace FluentPad
                     var result = new DataTable().Compute(expression, null);
                     if (result == DBNull.Value)
                     {
-                        var msgBox = new ContentDialog { Content = "Unable to calculate the expression!", Title = "ERROR", CloseButtonText = "Ok" };
-                        await msgBox.ShowAsync();
+                        CommonUtils.ShowDialog("Unable to calculate the expression!", "ERROR");
                     }
                     else
                     {
-                        var msgBox = new ContentDialog { Content = result.ToString(), Title = "ANSWER", CloseButtonText = "Ok" };
-                        await msgBox.ShowAsync();
+                        CommonUtils.ShowDialog(result.ToString(), "ANSWER");
                     }
                 }
             }
             catch (Exception)
             {
-                var msgBox = new ContentDialog { Content = "Error has occurred.", Title = "ERROR", CloseButtonText = "Ok" };
-                await msgBox.ShowAsync();
+                CommonUtils.ShowDialog("Error has occurred.", "ERROR");
             }
         }
 
@@ -64,14 +61,12 @@ namespace FluentPad
 
                 if (!success)
                 {
-                    var messageBox = new ContentDialog { Content = "Oops, unable to search.", Title = "FAILED TO OPEN URL", CloseButtonText = "Ok" };
-                    _ = messageBox.ShowAsync();
+                    CommonUtils.ShowDialog("Oops, unable to search.", "FAILED TO OPEN URL");
                 }
             }
             catch (Exception ex)
             {
-                var messageBox = new ContentDialog { Content = "Oops, an error has occurred: " + ex.Message, Title = "ERROR", CloseButtonText = "Ok" };
-                _ = messageBox.ShowAsync();
+                CommonUtils.ShowDialog("Oops, an error has occurred: " + ex.Message, "ERROR");
             }
         }
 

@@ -6,9 +6,9 @@ namespace FluentPad
 {
     internal class HelpMenu
     {
-        public async void ShowHelp()
+        public void ShowHelp()
         {
-            var messageBox = new ContentDialog { Content = @"Alt - Show/Hide Menu
+            CommonUtils.ShowDialog(@"Alt - Show/Hide Menu
 Ctrl + O to open file
 Ctrl + S to save current file
 Ctrl + F to search for text
@@ -18,19 +18,15 @@ Ctrl + I to insert date/time
 Ctrl + U for Upper Case
 Ctrl + L for Lower Case
 Ctrl + P for Calculating
-Ctrl + K for Statistics", Title = "Shortcuts Guide", CloseButtonText = "Ok" };
-
-            await messageBox.ShowAsync();
+Ctrl + K for Statistics", "Shortcuts Guide");
         }
 
-        public async void ShowAbout()
+        public void ShowAbout()
         {
-            var messageBox = new ContentDialog { Content = @"Developed by Makesh Vineeth
+            CommonUtils.ShowDialog(@"Developed by Makesh Vineeth
 Version 1.0
 Copyright © 2022
-All Rights Reserved.", Title = "About Notepad", CloseButtonText = "Ok" };
-
-            await messageBox.ShowAsync();
+All Rights Reserved.", "About Notepad");
         }
 
         public void ExitApp() => Application.Current.Exit();

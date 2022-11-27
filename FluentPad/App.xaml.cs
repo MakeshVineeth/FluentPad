@@ -131,7 +131,6 @@ namespace FluentPad
                 CloseButtonText = "No"
             };
 
-
             if ((await confirmFileDialog.ShowAsync()) == ContentDialogResult.Primary)
             {
                 return true;
@@ -148,8 +147,7 @@ namespace FluentPad
             }
             catch (Exception)
             {
-                var msgBox = new MessageDialog("Could not open the file.", "ERROR");
-                _ = msgBox.ShowAsync();
+                CommonUtils.ShowDialog("Could not open the file.", "ERROR");
             }
         }
     }

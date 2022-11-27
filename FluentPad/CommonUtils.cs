@@ -28,5 +28,17 @@ namespace FluentPad
             else
                 return "";
         }
+
+        public static void ShowDialog(string message, string title)
+        {
+            ContentDialog contentDialog = new ContentDialog
+            {
+                Title = title,
+                Content = message,
+                CloseButtonText = "Ok"
+            };
+
+            _ = contentDialog.ShowAsync();
+        }
     }
 }
