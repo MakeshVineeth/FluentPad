@@ -30,7 +30,7 @@ namespace FluentPad
 
                 string message = "Lines: " + lines + "\r" + "Words: " + words + "\r" + "Characters without spaces: " + charsNoSpaces + "\r" + "Characters with spaces: " + selectedText.Length
                     + "\r" + "Paragraphs: " + paragraphs + "\r" + "Special Characters: " + specialCharacters
-                    + "\r" + "Digits: " + numbers + "\r\r\r" + "(Not all information that is shown above may be accurate)";
+                    + "\r" + "Digits: " + numbers;
 
                 CommonUtils.ShowDialog(message, "Statistics");
             }
