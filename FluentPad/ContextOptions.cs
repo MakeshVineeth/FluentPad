@@ -1,4 +1,5 @@
-﻿using System;
+﻿using org.mariuszgromada.math.mxparser;
+using System;
 using System.Data;
 using System.Globalization;
 using System.Net;
@@ -25,8 +26,9 @@ namespace FluentPad
 
                 if (!string.IsNullOrWhiteSpace(expression))
                 {
-                    var result = new DataTable().Compute(expression, null);
-                    if (result == DBNull.Value)
+                    Expression expression1 = new Expression(expression);
+                    double result = expression1.calculate();
+                    if (double.IsNaN(result) || double.IsInfinity(result))
                     {
                         CommonUtils.ShowDialog("Unable to calculate the expression!", "ERROR");
                     }
