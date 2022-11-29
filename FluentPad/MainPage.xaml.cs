@@ -405,19 +405,45 @@ namespace FluentPad
 
         private async Task SavePDFAsync()
         {
-            if (string.IsNullOrWhiteSpace(textBoxMain.Text)) return;
-            var saveDialog = new Windows.Storage.Pickers.FileSavePicker();
-            saveDialog.FileTypeChoices.Add("PDF File", new List<string>() { ".pdf" });
-            saveDialog.DefaultFileExtension = ".pdf";
-            saveDialog.SuggestedFileName = "PDF_File";
-            StorageFile file = await saveDialog.PickSaveFileAsync();
-            PdfDocumentBuilder builder = new PdfDocumentBuilder();
-            PdfPageBuilder page = builder.AddPage(PageSize.A4);
-            PdfDocumentBuilder.AddedFont font = builder.AddStandard14Font(Standard14Font.Helvetica);
-            page.AddText(textBoxMain.Text, 12, new PdfPoint(25, 700), font);
-            byte[] documentBytes = builder.Build();
-            await FileIO.WriteBytesAsync(file, documentBytes);
-            CommonUtils.ShowDialog("Saved!", "Success");
+            try
+            {
+                if (string.IsNullOrWhiteSpace(textBoxMain.Text)) return;
+                var saveDialog = new Windows.Storage.Pickers.FileSavePicker();
+                saveDialog.FileTypeChoices.Add("PDF File", new List<string>() { ".pdf" });
+                saveDialog.DefaultFileExtension = ".pdf";
+                saveDialog.SuggestedFileName = "PDF_File";
+                StorageFile file = await saveDialog.PickSaveFileAsync();
+                PdfDocumentBuilder builder = new PdfDocumentBuilder();
+                PdfPageBuilder page = builder.AddPage(PageSize.A4);
+                PdfDocumentBuilder.AddedFont font = builder.AddStandard14Font(Standard14Font.Helvetica);
+
+                string[] lines = textBoxMain.Text.Split(
+                                new string[] { "\r\n", "\r", "\n" },
+                                StringSplitOptions.None
+                                );
+
+                int x_axis = 30;
+                int y_axis = 800;
+                foreach (string line in lines)
+                {
+                    if (y_axis <= 40)
+                    {
+                        page = builder.AddPage(PageSize.A4);
+                        y_axis = 800;
+                    }
+
+                    page.AddText(line, 12, new PdfPoint(x_axis, y_axis), font);
+                    y_axis -= 15;
+                }
+
+                byte[] documentBytes = builder.Build();
+                await FileIO.WriteBytesAsync(file, documentBytes);
+                CommonUtils.ShowDialog("Saved!", "Success");
+            }
+            catch (Exception ex)
+            {
+                CommonUtils.ShowDialog("Error: " + ex.Message, "ERROR");
+            }
         }
 
         private void SavePdfButton_Click(object sender, RoutedEventArgs e)
