@@ -222,6 +222,9 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.1</Version>
     </PackageReference>
+    <PackageReference Include="PdfPig">
+      <Version>0.1.6</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="FluentPad_TemporaryKey.pfx" />

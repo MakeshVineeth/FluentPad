@@ -51,6 +51,12 @@
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
+                            <MenuFlyoutItem x:Name="savePdfButton" Text="Save PDF" Click="SavePdfButton_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Save"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            
                             <MenuFlyoutSubItem x:Name="saveButton" Text="Save">
                                 <MenuFlyoutSubItem.Icon>
                                     <SymbolIcon Symbol="SaveLocal"/>

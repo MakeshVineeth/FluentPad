@@ -12,10 +12,15 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media;
 using Microsoft.Toolkit.Uwp.UI.Helpers;
 using Windows.UI.Core.Preview;
+using UglyToad.PdfPig.Content;
+using UglyToad.PdfPig.Core;
+using UglyToad.PdfPig.Fonts.Standard14Fonts;
+using UglyToad.PdfPig.Writer;
+using System.Threading.Tasks;
 
 namespace FluentPad
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Windows.UI.Xaml.Controls.Page
     {
         private StorageFile openedFile = null;
         private string lastSavedText = string.Empty;
@@ -396,6 +401,28 @@ namespace FluentPad
         private void OpenDirectUrlBtn_Click(object sender, RoutedEventArgs e)
         {
             contextOptions.OpenDirectUrl();
+        }
+
+        private async Task SavePDFAsync()
+        {
+            if (string.IsNullOrWhiteSpace(textBoxMain.Text)) return;
+            var saveDialog = new Windows.Storage.Pickers.FileSavePicker();
+            saveDialog.FileTypeChoices.Add("PDF File", new List<string>() { ".pdf" });
+            saveDialog.DefaultFileExtension = ".pdf";
+            saveDialog.SuggestedFileName = "PDF_File";
+            StorageFile file = await saveDialog.PickSaveFileAsync();
+            PdfDocumentBuilder builder = new PdfDocumentBuilder();
+            PdfPageBuilder page = builder.AddPage(PageSize.A4);
+            PdfDocumentBuilder.AddedFont font = builder.AddStandard14Font(Standard14Font.Helvetica);
+            page.AddText(textBoxMain.Text, 12, new PdfPoint(25, 700), font);
+            byte[] documentBytes = builder.Build();
+            await FileIO.WriteBytesAsync(file, documentBytes);
+            CommonUtils.ShowDialog("Saved!", "Success");
+        }
+
+        private void SavePdfButton_Click(object sender, RoutedEventArgs e)
+        {
+            _ = SavePDFAsync();
         }
     }
 }
