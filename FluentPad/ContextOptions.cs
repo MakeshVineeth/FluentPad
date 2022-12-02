@@ -153,13 +153,30 @@ namespace FluentPad
                     foreach (var each_item in arr)
                     {
                         JsonObject item1 = each_item.GetObject();
+                        string parts_of_speech = item1.GetNamedString("partOfSpeech");
+                        parts_of_speech = ToTitleCase(parts_of_speech);
+
                         JsonArray values = item1.GetNamedArray("definitions");
-                        IJsonValue obj1 = values[0];
-                        JsonObject obj2 = obj1.GetObject();
-                        meaning += "- " + obj2.GetNamedString("definition") + "\n";
+                        foreach (var each_sub_value in values)
+                        {
+                            JsonObject obj2 = each_sub_value.GetObject();
+
+                            string definition = obj2.GetNamedString("definition");
+                            string example = string.Empty;
+
+                            if (obj2.ContainsKey("example"))
+                            {
+                                example = obj2.GetNamedString("example");
+                                meaning += string.Format("({0}) {1}\n\"{2}\"\n\n", parts_of_speech, definition, example);
+                            }
+                            else
+                            {
+                                meaning += string.Format("({0}) {1}\n\n", parts_of_speech, definition);
+                            }
+                        }
                     }
 
-                    CommonUtils.ShowDialog(meaning, "Dictionary");
+                    CommonUtils.ShowDialog(meaning, "Define " + ToTitleCase(text));
                 }
             }
             catch (Exception)
@@ -168,10 +185,20 @@ namespace FluentPad
             }
         }
 
-        public void ToSentenceCase()
+        public string ToTitleCase(string text)
         {
             TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
-            textBoxMain.SelectedText = ti.ToTitleCase(textBoxMain.SelectedText.ToLower());
+            return ti.ToTitleCase(text.ToLower());
+        }
+
+        public void ToSentenceCase()
+        {
+            if (string.IsNullOrWhiteSpace(textBoxMain.SelectedText))
+            {
+                return;
+            }
+
+            textBoxMain.SelectedText = ToTitleCase(textBoxMain.SelectedText);
         }
     }
 }
