@@ -108,6 +108,7 @@ namespace FluentPad
                     text = text.Replace("class GfG", "class DSA");
                     text = text.Replace("  ", "\n");
                     text = Regex.Replace(text, @"[\r\n]+", "\n");
+                    text = ClearSpacesImplementation(text);
 
                     textBoxMain.Text = text;
                     textBoxMain.SelectionStart = textBoxMain.Text.Length;
@@ -119,9 +120,26 @@ namespace FluentPad
             }
         }
 
+        public string ClearSpacesImplementation(string text)
+        {
+            String result = "";
+            char[] delimiters = new char[] { '\r', '\n' };
+            String[] lines = text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+            foreach (String str in lines)
+            {
+                if (!String.IsNullOrWhiteSpace(str))
+                {
+                    result += str;
+                    result += Environment.NewLine;
+                }
+            }
+
+            return result;
+        }
+
         public void RemoveSpaces(TextBox textBoxMain)
         {
-            textBoxMain.Text = textBoxMain.Text.Trim();
+            textBoxMain.Text = ClearSpacesImplementation(textBoxMain.Text);
             textBoxMain.Focus(FocusState.Programmatic);
         }
 

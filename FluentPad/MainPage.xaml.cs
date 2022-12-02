@@ -17,6 +17,7 @@ using UglyToad.PdfPig.Core;
 using UglyToad.PdfPig.Fonts.Standard14Fonts;
 using UglyToad.PdfPig.Writer;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace FluentPad
 {
@@ -347,6 +348,19 @@ namespace FluentPad
                     case VirtualKey.L: LowercaseBtn_Click(sender, e); break;
                     case VirtualKey.P: CalculateBtn_Click(sender, e); break;
                     case VirtualKey.K: StatisticsBtn_Click(sender, e); break;
+                    case VirtualKey.C:
+                        {
+                            // Trimming spaces before copying.
+                            DataPackage dataPackage = new DataPackage
+                            {
+                                RequestedOperation = DataPackageOperation.Copy
+                            };
+
+                            dataPackage.SetText(miscellaneous.ClearSpacesImplementation(textBoxMain.Text));
+                            Clipboard.SetContent(dataPackage);
+                            e.Handled = true;
+                            break;
+                        }
                     default: break;
                 }
             }
