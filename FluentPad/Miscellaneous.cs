@@ -137,7 +137,7 @@ namespace FluentPad
             return result;
         }
 
-        public void RemoveSpaces(TextBox textBoxMain)
+        public void RemoveSpacesFromTextBox(TextBox textBoxMain)
         {
             textBoxMain.Text = ClearSpacesImplementation(textBoxMain.Text);
             textBoxMain.Focus(FocusState.Programmatic);

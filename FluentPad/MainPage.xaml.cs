@@ -245,7 +245,7 @@ namespace FluentPad
         private void SelectAllBtn_Click(object sender, RoutedEventArgs e) => operations.SelectAll();
         private void InsertDateTimeBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.InsertDateTime(textBoxMain);
         private void PasteClipboardBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.PasteFromClipboard();
-        private void TrimSpaceBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.RemoveSpaces(textBoxMain);
+        private void TrimSpaceBtn_Click(object sender, RoutedEventArgs e) => miscellaneous.RemoveSpacesFromTextBox(textBoxMain);
         private void AboutBtn_Click(object sender, RoutedEventArgs e) => helpMenu.ShowAbout();
         private void ShorcutsMenuBtn_Click(object sender, RoutedEventArgs e) => helpMenu.ShowHelp();
 
