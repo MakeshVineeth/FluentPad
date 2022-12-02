@@ -122,12 +122,12 @@ namespace FluentPad
 
         public string ClearSpacesImplementation(string text)
         {
-            String result = "";
+            string result = "";
             char[] delimiters = new char[] { '\r', '\n' };
-            String[] lines = text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-            foreach (String str in lines)
+            string[] lines = text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string str in lines)
             {
-                if (!String.IsNullOrWhiteSpace(str))
+                if (!string.IsNullOrWhiteSpace(str))
                 {
                     result += str;
                     result += Environment.NewLine;
