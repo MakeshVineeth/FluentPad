@@ -464,5 +464,10 @@ namespace FluentPad
         {
             _ = SavePDFAsync();
         }
+
+        private void EncodeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            contextOptions.UrlEncode();
+        }
     }
 }

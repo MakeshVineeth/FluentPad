@@ -1,6 +1,5 @@
 ﻿using org.mariuszgromada.math.mxparser;
 using System;
-using System.Data;
 using System.Globalization;
 using System.Net;
 using Windows.System;
@@ -106,6 +105,22 @@ namespace FluentPad
         {
             if (textBoxMain.CanRedo)
                 textBoxMain.Redo();
+        }
+
+        public void UrlEncode()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(textBoxMain.SelectedText))
+                {
+                    return;
+                }
+
+                textBoxMain.SelectedText = WebUtility.UrlEncode(textBoxMain.SelectedText);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void ToSentenceCase()

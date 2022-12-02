@@ -25,6 +25,7 @@
                     <AppBarButton x:Name="SearchGoogleBtn" Label="Search in Google" Icon="Find" Click="SearchGoogleBtn_Click"/>
                     <AppBarButton x:Name="OpenDirectUrlBtn" Label="Open First URL" Icon="Link" Click="OpenDirectUrlBtn_Click"/>
                     <AppBarButton x:Name="CalculateBtn" Label="Calculate" Icon="Calculator" Click="CalculateBtn_Click"/>
+                    <AppBarButton x:Name="EncodeBtn" Label="URL Encode" Icon="Globe" Click="EncodeBtn_Click"/>
                     <AppBarButton x:Name="UppercaseBtn" Label="Upper case" Icon="FontIncrease" Click="UppercaseBtn_Click"/>
                     <AppBarButton x:Name="LowercaseBtn" Label="Lower case" Icon="FontDecrease" Click="LowercaseBtn_Click"/>
                     <AppBarButton x:Name="TitlecaseBtn" Label="Sentence case" Icon="Font" Click="TitlecaseBtn_Click"/>
