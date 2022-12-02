@@ -181,7 +181,7 @@ namespace FluentPad
             }
             catch (Exception)
             {
-                CommonUtils.ShowDialog("Could not find the word meaning!", "ERROR");
+                CommonUtils.ShowDialog("Could not look up for the word!", "ERROR");
             }
         }
 
