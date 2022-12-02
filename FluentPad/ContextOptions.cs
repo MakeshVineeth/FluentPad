@@ -2,6 +2,8 @@
 using System;
 using System.Globalization;
 using System.Net;
+using System.Net.Http;
+using Windows.Data.Json;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 
@@ -120,6 +122,49 @@ namespace FluentPad
             }
             catch (Exception)
             {
+            }
+        }
+
+        public async void GetWordMeaning()
+        {
+            if (string.IsNullOrWhiteSpace(textBoxMain.SelectedText))
+            {
+                return;
+            }
+
+            string text = textBoxMain.SelectedText;
+
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    string url = @"https://api.dictionaryapi.dev/api/v2/entries/en/" + text;
+                    string response = await httpClient.GetStringAsync(url);
+
+                    if (string.IsNullOrWhiteSpace(response)) { return; }
+
+                    response = response.Remove(0, 1);
+                    response = response.Remove(response.Length - 1, 1);
+                    JsonObject obj = JsonObject.Parse(response);
+                    IJsonValue def = obj["meanings"];
+                    JsonArray arr = def.GetArray();
+                    string meaning = string.Empty;
+
+                    foreach (var each_item in arr)
+                    {
+                        JsonObject item1 = each_item.GetObject();
+                        JsonArray values = item1.GetNamedArray("definitions");
+                        IJsonValue obj1 = values[0];
+                        JsonObject obj2 = obj1.GetObject();
+                        meaning += "- " + obj2.GetNamedString("definition") + "\n";
+                    }
+
+                    CommonUtils.ShowDialog(meaning, "Dictionary");
+                }
+            }
+            catch (Exception)
+            {
+                CommonUtils.ShowDialog("Could not find the word meaning!", "ERROR");
             }
         }
 

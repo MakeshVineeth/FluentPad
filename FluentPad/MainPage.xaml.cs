@@ -469,5 +469,10 @@ namespace FluentPad
         {
             contextOptions.UrlEncode();
         }
+
+        private void DefineBtn_Click(object sender, RoutedEventArgs e)
+        {
+            contextOptions.GetWordMeaning();
+        }
     }
 }
