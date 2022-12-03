@@ -26,7 +26,11 @@
                     <AppBarButton x:Name="OpenDirectUrlBtn" Label="Open First URL" Icon="Link" Click="OpenDirectUrlBtn_Click"/>
                     <AppBarButton x:Name="CalculateBtn" Label="Calculate" Icon="Calculator" Click="CalculateBtn_Click"/>
                     <AppBarButton x:Name="EncodeBtn" Label="URL Encode" Icon="Globe" Click="EncodeBtn_Click"/>
-                    <AppBarButton x:Name="DefineBtn" Label="Define" Icon="Find" Click="DefineBtn_Click"/>
+                    <AppBarButton x:Name="DefineBtn" Label="Define" Click="DefineBtn_Click">
+                        <AppBarButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE82D;"></FontIcon>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
                     <AppBarButton x:Name="UppercaseBtn" Label="Upper case" Icon="FontIncrease" Click="UppercaseBtn_Click"/>
                     <AppBarButton x:Name="LowercaseBtn" Label="Lower case" Icon="FontDecrease" Click="LowercaseBtn_Click"/>
                     <AppBarButton x:Name="TitlecaseBtn" Label="Sentence case" Icon="Font" Click="TitlecaseBtn_Click"/>

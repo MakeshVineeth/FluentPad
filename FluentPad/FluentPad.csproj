@@ -134,6 +134,7 @@
     <Compile Include="CommonUtils.cs" />
     <Compile Include="ContextOptions.cs" />
     <Compile Include="HelpMenu.cs" />
+    <Compile Include="Json_Custom.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -225,6 +226,9 @@
     </PackageReference>
     <PackageReference Include="PdfPig">
       <Version>0.1.7-alpha-20220814-2f9a9</Version>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>7.0.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

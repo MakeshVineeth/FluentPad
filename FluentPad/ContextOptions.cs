@@ -6,12 +6,15 @@ using System.Net.Http;
 using Windows.Data.Json;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
+using System.Text.Json;
+using System.Collections.Generic;
 
 namespace FluentPad
 {
     internal class ContextOptions
     {
         private readonly TextBox textBoxMain;
+        public const string UserAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)";
 
         public ContextOptions(TextBox textBoxMain)
         {
@@ -138,45 +141,40 @@ namespace FluentPad
             {
                 using (var httpClient = new HttpClient())
                 {
+                    httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(UserAgentString);
                     string url = @"https://api.dictionaryapi.dev/api/v2/entries/en/" + text;
                     string response = await httpClient.GetStringAsync(url);
 
                     if (string.IsNullOrWhiteSpace(response)) { return; }
 
-                    response = response.Remove(0, 1);
-                    response = response.Remove(response.Length - 1, 1);
-                    JsonObject obj = JsonObject.Parse(response);
-                    IJsonValue def = obj["meanings"];
-                    JsonArray arr = def.GetArray();
-                    string meaning = string.Empty;
-
-                    foreach (var each_item in arr)
+                    List<Root> root_list = JsonSerializer.Deserialize<List<Root>>(response, options: new JsonSerializerOptions()
                     {
-                        JsonObject item1 = each_item.GetObject();
-                        string parts_of_speech = item1.GetNamedString("partOfSpeech");
-                        parts_of_speech = ToTitleCase(parts_of_speech);
+                        PropertyNameCaseInsensitive = true
+                    });
 
-                        JsonArray values = item1.GetNamedArray("definitions");
-                        foreach (var each_sub_value in values)
+                    string meaning_text = string.Empty;
+
+                    foreach (Root root_obj in root_list)
+                    {
+                        foreach (Meaning meaning_obj in root_obj.Meanings)
                         {
-                            JsonObject obj2 = each_sub_value.GetObject();
+                            string parts_of_speech = ToTitleCase(meaning_obj.PartOfSpeech);
 
-                            string definition = obj2.GetNamedString("definition");
-                            string example = string.Empty;
-
-                            if (obj2.ContainsKey("example"))
+                            foreach (DefinitionClass definition_obj in meaning_obj.Definitions)
                             {
-                                example = obj2.GetNamedString("example");
-                                meaning += string.Format("({0}) {1}\n\"{2}\"\n\n", parts_of_speech, definition, example);
-                            }
-                            else
-                            {
-                                meaning += string.Format("({0}) {1}\n\n", parts_of_speech, definition);
+                                if (definition_obj.Example != null && !string.IsNullOrWhiteSpace(definition_obj.Example))
+                                {
+                                    meaning_text += string.Format("({0}) {1}\n\"{2}\"\n\n", parts_of_speech, definition_obj.Definition, definition_obj.Example);
+                                }
+                                else
+                                {
+                                    meaning_text += string.Format("({0}) {1}\n\n", parts_of_speech, definition_obj.Definition);
+                                }
                             }
                         }
                     }
 
-                    CommonUtils.ShowDialog(meaning, "Define " + ToTitleCase(text));
+                    CommonUtils.ShowDialog(meaning_text, "Define " + ToTitleCase(text));
                 }
             }
             catch (Exception)
