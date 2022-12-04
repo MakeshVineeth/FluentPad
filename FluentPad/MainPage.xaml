@@ -51,7 +51,7 @@
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
-                            <MenuFlyoutItem x:Name="newWindowButton" Text="New Window" Click="newWindowButton_Click">
+                            <MenuFlyoutItem x:Name="newWindowButton" Text="New Window" Click="NewWindowButton_Click">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="NewWindow"/>
                                 </MenuFlyoutItem.Icon>

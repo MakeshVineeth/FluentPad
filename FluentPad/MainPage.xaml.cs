@@ -20,6 +20,8 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI;
+using Windows.ApplicationModel.Core;
 
 namespace FluentPad
 {
@@ -41,33 +43,40 @@ namespace FluentPad
         {
             InitializeComponent();
 
-            operations = new Operations(textBoxMain);
-            miscellaneous = new Miscellaneous(textBoxMain);
-            helpMenu = new HelpMenu();
-            contextOptions = new ContextOptions(textBoxMain);
-
-            timer = new DispatcherTimer();
-            timer.Tick += Timer_Tick;
-            timer.Interval = new TimeSpan(0, 0, 3);
-
-            ToggleMenuVisibility();
-            AutoSaveToggle();
-
-            UndoBtn.IsEnabled = false;
-            RedoBtn.IsEnabled = false;
-
-            var listener = new ThemeListener();
-            listener.ThemeChanged += Listener_ThemeChanged;
-            if (ActualTheme == ElementTheme.Light)
+            try
             {
-                FixTitleBar();
+                operations = new Operations(textBoxMain);
+                miscellaneous = new Miscellaneous(textBoxMain);
+                helpMenu = new HelpMenu();
+                contextOptions = new ContextOptions(textBoxMain);
+
+                timer = new DispatcherTimer();
+                timer.Tick += Timer_Tick;
+                timer.Interval = new TimeSpan(0, 0, 3);
+
+                ToggleMenuVisibility();
+                AutoSaveToggle();
+
+                UndoBtn.IsEnabled = false;
+                RedoBtn.IsEnabled = false;
+
+                var listener = new ThemeListener();
+                listener.ThemeChanged += Listener_ThemeChanged;
+                if (ActualTheme == ElementTheme.Light)
+                {
+                    FixTitleBar();
+                }
+
+                // Force dark theme until light theme fixed.
+                var root = (FrameworkElement)Window.Current.Content;
+                if (root != null)
+                    root.RequestedTheme = ElementTheme.Dark;
+
+                SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += OnCloseRequest;
             }
-
-            // Force dark theme until light theme fixed.
-            var root = (FrameworkElement)Window.Current.Content;
-            root.RequestedTheme = ElementTheme.Dark;
-
-            SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += this.OnCloseRequest;
+            catch (Exception)
+            {
+            }
         }
 
         private void OnCloseRequest(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
@@ -477,19 +486,26 @@ namespace FluentPad
             contextOptions.GetWordMeaning();
         }
 
-        private void newWindowButton_Click(object sender, RoutedEventArgs e)
+        private void NewWindowButton_Click(object sender, RoutedEventArgs e)
         {
-            _ = ShowNewWindowAsync();
+            ShowNewWindowAsync();
         }
 
-        private async Task ShowNewWindowAsync()
+        private async void ShowNewWindowAsync()
         {
-            AppWindow appWindow = await AppWindow.TryCreateAsync();
-            Frame OpenPage1 = new Frame();
-            OpenPage1.Navigate(typeof(MainPage));
-            ElementCompositionPreview.SetAppWindowContent(appWindow, OpenPage1);
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            int newViewId = 0;
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                Frame frame = new Frame();
+                frame.Navigate(typeof(MainPage), null);
+                Window.Current.Content = frame;
+                Window.Current.Activate();
 
-            await appWindow.TryShowAsync();
+                newViewId = ApplicationView.GetForCurrentView().Id;
+            });
+
+            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
         }
     }
 }
