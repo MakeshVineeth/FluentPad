@@ -68,7 +68,7 @@
                                     <SymbolIcon Symbol="Save"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            
+
                             <MenuFlyoutSubItem x:Name="saveButton" Text="Save">
                                 <MenuFlyoutSubItem.Icon>
                                     <SymbolIcon Symbol="SaveLocal"/>
@@ -114,6 +114,12 @@
                             <MenuFlyoutItem x:Name="SelectAllBtn" Text="Select All" Click="SelectAllBtn_Click">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="SelectAll"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="CharMapBtn" Text="Character Map" Click="CharMapBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Character"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>

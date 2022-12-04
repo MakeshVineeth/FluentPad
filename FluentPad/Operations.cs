@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -129,6 +131,18 @@ namespace FluentPad
             {
                 textBoxMain.Focus(FocusState.Programmatic);
                 textBoxMain.SelectAll();
+            }
+        }
+
+        public async Task LaunchCharMapAsync()
+        {
+            try
+            {
+                await Launcher.LaunchUriAsync(new Uri("charmap"));
+            }
+            catch (Exception)
+            {
+                CommonUtils.ShowDialog("Unable to launch Character Map!", "ERROR");
             }
         }
     }

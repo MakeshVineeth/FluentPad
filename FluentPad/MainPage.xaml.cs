@@ -513,5 +513,10 @@ namespace FluentPad
             {
             }
         }
+
+        private void CharMapBtn_Click(object sender, RoutedEventArgs e)
+        {
+            operations.LaunchCharMapAsync();
+        }
     }
 }
