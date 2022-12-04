@@ -29,7 +29,7 @@ namespace FluentPad
                 return "";
         }
 
-        public static void ShowDialog(string message, string title)
+        public static void ShowDialog(object message, string title)
         {
             ContentDialog contentDialog = new ContentDialog
             {
