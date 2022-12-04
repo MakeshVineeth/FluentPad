@@ -149,6 +149,7 @@ namespace FluentPad
                         if (package.DisplayName.Contains("Character Map"))
                         {
                             await firstApp?.LaunchAsync();
+                            break;
                         }
                     }
                 }

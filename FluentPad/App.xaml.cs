@@ -131,5 +131,10 @@ namespace FluentPad
                 CommonUtils.ShowDialog("Could not open the file.", "ERROR");
             }
         }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            base.OnActivated(args);
+        }
     }
 }
