@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Windows.Management.Deployment;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -136,11 +138,24 @@ namespace FluentPad
         {
             try
             {
-
+                PackageManager manager = new PackageManager();
+                var packages = manager.FindPackagesForUser(string.Empty);
+                foreach (var package in packages)
+                {
+                    var appEntries = await package.GetAppListEntriesAsync();
+                    var firstApp = appEntries.FirstOrDefault();
+                    if (firstApp != null)
+                    {
+                        if (package.DisplayName.Contains("Character Map"))
+                        {
+                            await firstApp?.LaunchAsync();
+                        }
+                    }
+                }
             }
             catch (Exception)
             {
-                CommonUtils.ShowDialog("Unable to launch Character Map!", "ERROR");
+                CommonUtils.ShowDialog("Unable to launch Character Map! ", "ERROR");
             }
         }
     }

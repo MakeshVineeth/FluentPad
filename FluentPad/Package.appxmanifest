@@ -68,6 +68,7 @@
 	<Capabilities>
 		<rescap:Capability Name="broadFileSystemAccess"/>
 		<rescap:Capability Name="confirmAppClose"/>
+		<rescap:Capability Name="packageQuery" />
 		<uap:Capability Name="removableStorage"/>
 		<Capability Name="internetClient" />
 	</Capabilities>
