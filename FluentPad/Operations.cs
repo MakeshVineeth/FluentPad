@@ -140,6 +140,8 @@ namespace FluentPad
             {
                 PackageManager manager = new PackageManager();
                 var packages = manager.FindPackagesForUser(string.Empty);
+                bool flag = false;
+
                 foreach (var package in packages)
                 {
                     var appEntries = await package.GetAppListEntriesAsync();
@@ -149,14 +151,20 @@ namespace FluentPad
                         if (package.DisplayName.Contains("Character Map"))
                         {
                             await firstApp?.LaunchAsync();
+                            flag = true;
                             break;
                         }
                     }
                 }
+
+                if (!flag)
+                {
+                    CommonUtils.ShowDialog("Unable to find Character Map UWP! ", "Not Found");
+                }
             }
             catch (Exception)
             {
-                CommonUtils.ShowDialog("Unable to launch Character Map! ", "ERROR");
+                CommonUtils.ShowDialog("Error, unable to launch the character map!", "ERROR");
             }
         }
     }
