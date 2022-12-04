@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -134,11 +132,11 @@ namespace FluentPad
             }
         }
 
-        public async Task LaunchCharMapAsync()
+        public async void LaunchCharMapAsync()
         {
             try
             {
-                await Launcher.LaunchUriAsync(new Uri("charmap"));
+
             }
             catch (Exception)
             {

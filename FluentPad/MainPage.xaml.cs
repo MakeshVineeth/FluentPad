@@ -18,9 +18,6 @@ using UglyToad.PdfPig.Fonts.Standard14Fonts;
 using UglyToad.PdfPig.Writer;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.UI.WindowManagement;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI;
 using Windows.ApplicationModel.Core;
 
 namespace FluentPad
