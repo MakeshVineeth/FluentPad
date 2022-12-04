@@ -18,6 +18,8 @@ using UglyToad.PdfPig.Fonts.Standard14Fonts;
 using UglyToad.PdfPig.Writer;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.UI.WindowManagement;
+using Windows.UI.Xaml.Hosting;
 
 namespace FluentPad
 {
@@ -473,6 +475,21 @@ namespace FluentPad
         private void DefineBtn_Click(object sender, RoutedEventArgs e)
         {
             contextOptions.GetWordMeaning();
+        }
+
+        private void newWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            _ = ShowNewWindowAsync();
+        }
+
+        private async Task ShowNewWindowAsync()
+        {
+            AppWindow appWindow = await AppWindow.TryCreateAsync();
+            Frame OpenPage1 = new Frame();
+            OpenPage1.Navigate(typeof(MainPage));
+            ElementCompositionPreview.SetAppWindowContent(appWindow, OpenPage1);
+
+            await appWindow.TryShowAsync();
         }
     }
 }

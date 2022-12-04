@@ -51,6 +51,12 @@
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
 
+                            <MenuFlyoutItem x:Name="newWindowButton" Text="New Window" Click="newWindowButton_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="NewWindow"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
                             <MenuFlyoutItem x:Name="openButton" Text="Open" Click="OpenButton_Click">
                                 <MenuFlyoutItem.Icon>
                                     <SymbolIcon Symbol="OpenFile"/>
