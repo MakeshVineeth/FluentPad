@@ -493,19 +493,25 @@ namespace FluentPad
 
         private async void ShowNewWindowAsync()
         {
-            CoreApplicationView newView = CoreApplication.CreateNewView();
-            int newViewId = 0;
-            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            try
             {
-                Frame frame = new Frame();
-                frame.Navigate(typeof(MainPage), null);
-                Window.Current.Content = frame;
-                Window.Current.Activate();
+                CoreApplicationView newView = CoreApplication.CreateNewView();
+                int newViewId = 0;
+                await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    Frame frame = new Frame();
+                    frame.Navigate(typeof(MainPage), null);
+                    Window.Current.Content = frame;
+                    Window.Current.Activate();
 
-                newViewId = ApplicationView.GetForCurrentView().Id;
-            });
+                    newViewId = ApplicationView.GetForCurrentView().Id;
+                });
 
-            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+                bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }
