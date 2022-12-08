@@ -122,6 +122,24 @@
                                     <SymbolIcon Symbol="Character"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="InsertEmojiBtn" Text="Insert Emoji" Click="InsertEmojiBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Emoji"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="InsertSymbolBtn" Text="Insert Symbol" Click="InsertSymbolBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF6BA;"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="VirtualKeyboardBtn" Text="Virtual Keyboard" Click="VirtualKeyboardBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Keyboard"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>

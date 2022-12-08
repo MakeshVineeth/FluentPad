@@ -515,5 +515,20 @@ namespace FluentPad
         {
             operations.LaunchCharMapAsync();
         }
+
+        private void InsertEmojiBtn_Click(object sender, RoutedEventArgs e)
+        {
+            operations.InsertEmoji();
+        }
+
+        private void VirtualKeyboardBtn_Click(object sender, RoutedEventArgs e)
+        {
+            operations.ShowVirtualKeyboard();
+        }
+
+        private void InsertSymbolBtn_Click(object sender, RoutedEventArgs e)
+        {
+            operations.InsertSymbol();
+        }
     }
 }

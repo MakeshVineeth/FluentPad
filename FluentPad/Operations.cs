@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Windows.Management.Deployment;
+using Windows.UI.ViewManagement.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -167,7 +168,23 @@ namespace FluentPad
                 CommonUtils.ShowDialog("Error, unable to launch the character map!", "ERROR");
             }
         }
+
+        public void InsertEmoji()
+        {
+            textBoxMain.Focus(FocusState.Programmatic);
+            CoreInputView.GetForCurrentView().TryShow(CoreInputViewKind.Emoji);
+        }
+
+        public void InsertSymbol()
+        {
+            textBoxMain.Focus(FocusState.Programmatic);
+            CoreInputView.GetForCurrentView().TryShow(CoreInputViewKind.Symbols);
+        }
+
+        public void ShowVirtualKeyboard()
+        {
+            textBoxMain.Focus(FocusState.Programmatic);
+            CoreInputView.GetForCurrentView().TryShow(CoreInputViewKind.Keyboard);
+        }
     }
-
-
 }
