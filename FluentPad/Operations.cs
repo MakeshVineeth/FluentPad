@@ -186,5 +186,11 @@ namespace FluentPad
             textBoxMain.Focus(FocusState.Programmatic);
             CoreInputView.GetForCurrentView().TryShow(CoreInputViewKind.Keyboard);
         }
+
+        public void ShowHandwritingPanel()
+        {
+            textBoxMain.Focus(FocusState.Programmatic);
+            CoreInputView.GetForCurrentView().TryShow(CoreInputViewKind.Handwriting);
+        }
     }
 }

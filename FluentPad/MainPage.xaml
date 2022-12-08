@@ -140,6 +140,12 @@
                                     <SymbolIcon Symbol="Keyboard"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
+
+                            <MenuFlyoutItem x:Name="HandwritingBtn" Text="Handwriting" Click="HandwritingBtn_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xF742;"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
                 </Button>

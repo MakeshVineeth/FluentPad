@@ -530,5 +530,10 @@ namespace FluentPad
         {
             operations.InsertSymbol();
         }
+
+        private void HandwritingBtn_Click(object sender, RoutedEventArgs e)
+        {
+            operations.ShowHandwritingPanel();
+        }
     }
 }
