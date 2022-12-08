@@ -11,12 +11,12 @@ namespace FluentPad
         public RootTabView()
         {
             InitializeComponent();
-
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             Window.Current.SetTitleBar(CustomDragRegion);
+            TabView_AddTabButtonClick(tabView, null);
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
@@ -47,7 +47,7 @@ namespace FluentPad
             newTab.Content = frame;
             frame.Navigate(typeof(MainPage));
             tabView.TabItems.Add(newTab);
-            tabView.SelectedIndex++;
+            tabView.SelectedIndex = tabView.TabItems.Count - 1;
         }
 
         private void TabView_TabCloseRequested(muxc.TabView sender, muxc.TabViewTabCloseRequestedEventArgs args)
