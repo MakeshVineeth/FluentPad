@@ -19,6 +19,7 @@ using UglyToad.PdfPig.Writer;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Core;
+using Microsoft.UI.Xaml.Controls;
 
 namespace FluentPad
 {
@@ -161,8 +162,7 @@ namespace FluentPad
                             if (!string.IsNullOrWhiteSpace(strFilePath))
                             {
                                 openedFile = file;
-                                var appView = ApplicationView.GetForCurrentView();
-                                appView.Title = Path.GetFileName(strFilePath);
+                                ChangeTitle(Path.GetFileName(strFilePath));
                                 LoadTextFromFile();
                             }
                         }
@@ -212,8 +212,7 @@ namespace FluentPad
                 if (file != null)
                 {
                     openedFile = file;
-                    ApplicationView appView = ApplicationView.GetForCurrentView();
-                    appView.Title = file.DisplayName;
+                    ChangeTitle(file.DisplayName);
                     string text = await FileIO.ReadTextAsync(file);
                     if (!string.IsNullOrWhiteSpace(text))
                     {
@@ -229,6 +228,14 @@ namespace FluentPad
             }
         }
 
+        private void ChangeTitle(string title)
+        {
+            ApplicationView appView = ApplicationView.GetForCurrentView();
+            TabViewItem tabViewItem = Frame.Parent as TabViewItem;
+            appView.Title = title;
+            tabViewItem.Header = title;
+        }
+
         private void FixAutoSelect() => textBoxMain.SelectionStart = 0;
         private void ExitButton_Click(object sender, RoutedEventArgs e) => helpMenu.ExitApp();
 
@@ -237,9 +244,7 @@ namespace FluentPad
             lastSavedText = string.Empty;
             textBoxMain.Text = string.Empty;
             openedFile = null;
-
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            view.Title = string.Empty;
+            ChangeTitle("New Document");
         }
 
         private void CutButton_Click(object sender, RoutedEventArgs e) => contextOptions.CutText();
@@ -281,9 +286,9 @@ namespace FluentPad
                 ApplicationView view = ApplicationView.GetForCurrentView();
 
                 if (view.Title.EndsWith(pattern))
-                    view.Title = view.Title.Replace(pattern, string.Empty);
+                    ChangeTitle(view.Title.Replace(pattern, string.Empty));
 
-                view.Title = openedFile.DisplayName;
+                ChangeTitle(openedFile.DisplayName);
                 await FileIO.WriteTextAsync(openedFile, text);
             }
             catch (Exception)
@@ -307,9 +312,7 @@ namespace FluentPad
                 {
                     await FileIO.WriteTextAsync(openedFile, textBoxMain.Text);
                     openedFile = file;
-                    ApplicationView view = ApplicationView.GetForCurrentView();
-                    view.Title = openedFile.DisplayName;
-
+                    ChangeTitle(openedFile.DisplayName);
                     CommonUtils.ShowDialog("Saved!", "Success");
                 }
             }
@@ -378,16 +381,18 @@ namespace FluentPad
         {
             string text = textBoxMain.Text;
             int compareInt = string.CompareOrdinal(lastSavedText, text);
-
             ApplicationView view = ApplicationView.GetForCurrentView();
+
             if (compareInt != 0)
             {
                 if (!view.Title.EndsWith(pattern))
-                    view.Title += pattern;
+                {
+                    ChangeTitle(view.Title + pattern);
+                }
             }
             else if (compareInt == 0 && view.Title.EndsWith(pattern))
             {
-                view.Title = view.Title.Replace(pattern, string.Empty);
+                ChangeTitle(view.Title.Replace(pattern, string.Empty));
             }
 
             UndoBtn.IsEnabled = textBoxMain.CanUndo;
@@ -500,7 +505,6 @@ namespace FluentPad
                     frame.Navigate(typeof(MainPage), null);
                     Window.Current.Content = frame;
                     Window.Current.Activate();
-
                     newViewId = ApplicationView.GetForCurrentView().Id;
                 });
 

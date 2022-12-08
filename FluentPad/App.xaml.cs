@@ -96,7 +96,7 @@ namespace FluentPad
             Frame rootFrame = new Frame();
             rootFrame.NavigationFailed += OnNavigationFailed;
             Window.Current.Content = rootFrame;
-            rootFrame.Navigate(typeof(MainPage), args);
+            rootFrame.Navigate(typeof(RootTabView), args);
             Window.Current.Activate();
         }
 

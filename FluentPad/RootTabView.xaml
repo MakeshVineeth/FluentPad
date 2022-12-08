@@ -12,7 +12,8 @@
     >
     <muxc:TabView x:Name="tabView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                   AddTabButtonClick="TabView_AddTabButtonClick"
-               TabCloseRequested="TabView_TabCloseRequested">
+               TabCloseRequested="TabView_TabCloseRequested"
+                  Background="{ThemeResource SystemControlAcrylicElementBrush}">
         <muxc:TabView.TabStripHeader>
             <Grid x:Name="ShellTitlebarInset" Background="Transparent" />
         </muxc:TabView.TabStripHeader>

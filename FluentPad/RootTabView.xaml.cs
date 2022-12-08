@@ -1,18 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
 
 
@@ -22,7 +13,7 @@ namespace FluentPad
     {
         public RootTabView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
@@ -54,11 +45,11 @@ namespace FluentPad
                 IconSource = new muxc.SymbolIconSource() { Symbol = Symbol.Document },
                 Header = "New Document"
             };
+
             Frame frame = new Frame();
             newTab.Content = frame;
             frame.Navigate(typeof(MainPage));
-
-            sender.TabItems.Add(newTab);
+            tabView.TabItems.Add(newTab);
             tabView.SelectedIndex++;
         }
 
