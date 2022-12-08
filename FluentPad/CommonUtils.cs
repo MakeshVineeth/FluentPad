@@ -43,21 +43,28 @@ namespace FluentPad
 
         public static async Task<bool> ShowPromptAsync(object content, string title)
         {
-            ContentDialog confirmFileDialog = new ContentDialog
+            try
             {
-                Title = title,
-                Content = content,
-                PrimaryButtonText = "Yes",
-                IsSecondaryButtonEnabled = true,
-                CloseButtonText = "No"
-            };
+                ContentDialog confirmFileDialog = new ContentDialog
+                {
+                    Title = title,
+                    Content = content,
+                    PrimaryButtonText = "Yes",
+                    IsSecondaryButtonEnabled = true,
+                    CloseButtonText = "No"
+                };
 
-            if ((await confirmFileDialog.ShowAsync()) == ContentDialogResult.Primary)
-            {
-                return true;
+                if ((await confirmFileDialog.ShowAsync()) == ContentDialogResult.Primary)
+                {
+                    return true;
+                }
+
+                return false;
             }
-
-            return false;
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
