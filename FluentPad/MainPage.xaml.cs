@@ -381,18 +381,19 @@ namespace FluentPad
         {
             string text = textBoxMain.Text;
             int compareInt = string.CompareOrdinal(lastSavedText, text);
-            ApplicationView view = ApplicationView.GetForCurrentView();
+            TabViewItem tabViewItem = Frame.Parent as TabViewItem;
+            string header = (string)tabViewItem.Header;
 
             if (compareInt != 0)
             {
-                if (!view.Title.EndsWith(pattern))
+                if (!header.EndsWith(pattern))
                 {
-                    ChangeTitle(view.Title + pattern);
+                    ChangeTitle(header + pattern);
                 }
             }
-            else if (compareInt == 0 && view.Title.EndsWith(pattern))
+            else if (compareInt == 0 && header.EndsWith(pattern))
             {
-                ChangeTitle(view.Title.Replace(pattern, string.Empty));
+                ChangeTitle(header.Replace(pattern, string.Empty));
             }
 
             UndoBtn.IsEnabled = textBoxMain.CanUndo;
