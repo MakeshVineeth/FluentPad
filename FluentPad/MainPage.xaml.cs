@@ -27,7 +27,6 @@ namespace FluentPad
     {
         private StorageFile openedFile = null;
         private string lastSavedText = string.Empty;
-        public static string pattern = " *";
         private readonly DispatcherTimer timer;
         private readonly Operations operations;
         private readonly Miscellaneous miscellaneous;
@@ -82,10 +81,32 @@ namespace FluentPad
             OnCloseEvents(e);
         }
 
+        private bool CheckIfUnSaved()
+        {
+            TabViewItem tabViewItem = Frame.Parent as TabViewItem;
+
+            if (tabViewItem.IconSource == null)
+            {
+                return false;
+            }
+
+            Microsoft.UI.Xaml.Controls.SymbolIconSource symbolIcon = tabViewItem.IconSource as Microsoft.UI.Xaml.Controls.SymbolIconSource;
+
+            return symbolIcon.Symbol == Symbol.Edit;
+        }
+
+        private void ResetTabIcon()
+        {
+            TabViewItem tabViewItem = Frame.Parent as TabViewItem;
+            tabViewItem.IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource()
+            {
+                Symbol = Symbol.Document
+            };
+        }
+
         private void OnCloseEvents(SystemNavigationCloseRequestedPreviewEventArgs e)
         {
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            if (view.Title.EndsWith(pattern))
+            if (CheckIfUnSaved())
             {
                 e.Handled = true;
                 operations.CloseApplicationPrompt();
@@ -108,8 +129,7 @@ namespace FluentPad
 
         private void Timer_Tick(object sender, object e)
         {
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            if (autoSaveToggle.IsChecked && view.Title.EndsWith(pattern) && openedFile != null)
+            if (autoSaveToggle.IsChecked && CheckIfUnSaved() && openedFile != null)
                 SaveCurrentBtn_Click(null, null);
         }
 
@@ -285,8 +305,8 @@ namespace FluentPad
                 lastSavedText = text;
                 ApplicationView view = ApplicationView.GetForCurrentView();
 
-                if (view.Title.EndsWith(pattern))
-                    ChangeTitle(view.Title.Replace(pattern, string.Empty));
+                if (CheckIfUnSaved())
+                    ResetTabIcon();
 
                 ChangeTitle(openedFile.DisplayName);
                 await FileIO.WriteTextAsync(openedFile, text);
@@ -382,18 +402,17 @@ namespace FluentPad
             string text = textBoxMain.Text;
             int compareInt = string.CompareOrdinal(lastSavedText, text);
             TabViewItem tabViewItem = Frame.Parent as TabViewItem;
-            string header = (string)tabViewItem.Header;
 
             if (compareInt != 0)
             {
-                if (!header.EndsWith(pattern))
+                tabViewItem.IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource()
                 {
-                    ChangeTitle(header + pattern);
-                }
+                    Symbol = Symbol.Edit
+                };
             }
-            else if (compareInt == 0 && header.EndsWith(pattern))
+            else if (compareInt == 0)
             {
-                ChangeTitle(header.Replace(pattern, string.Empty));
+                ResetTabIcon();
             }
 
             UndoBtn.IsEnabled = textBoxMain.CanUndo;

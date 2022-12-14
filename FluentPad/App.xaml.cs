@@ -100,7 +100,7 @@ namespace FluentPad
         private void CheckUnsaved(FileActivatedEventArgs args)
         {
             ApplicationView view = ApplicationView.GetForCurrentView();
-            if (view.Title.EndsWith(MainPage.pattern))
+            if (view.Title.EndsWith(" *")) // TODO
             {
                 _ = CommonUtils.ShowPromptAsync("File is not saved. Do you still want to close this file and open another file?", "Open new file?").ContinueWith((obj) =>
                 {
