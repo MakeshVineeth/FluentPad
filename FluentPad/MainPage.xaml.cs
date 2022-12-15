@@ -76,14 +76,12 @@ namespace FluentPad
 
         private bool CheckIfUnSaved()
         {
-            if (!(Frame?.Parent is TabViewItem tabViewItem) || tabViewItem.IconSource == null)
+            if (!(Frame?.Parent is TabViewItem tabViewItem))
             {
                 return false;
             }
 
-            Microsoft.UI.Xaml.Controls.SymbolIconSource symbolIcon = tabViewItem.IconSource as Microsoft.UI.Xaml.Controls.SymbolIconSource;
-
-            return symbolIcon.Symbol == Symbol.Edit;
+            return CommonUtils.CheckIfUnSaved(tabViewItem);
         }
 
         private void ResetTabIcon()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -39,6 +40,17 @@ namespace FluentPad
             };
 
             _ = contentDialog.ShowAsync();
+        }
+
+        public static bool CheckIfUnSaved(TabViewItem item)
+        {
+            if (item?.IconSource == null)
+            {
+                return false;
+            }
+
+            Microsoft.UI.Xaml.Controls.SymbolIconSource symbolIcon = item.IconSource as Microsoft.UI.Xaml.Controls.SymbolIconSource;
+            return symbolIcon.Symbol == Symbol.Edit;
         }
 
         public static async Task<bool> ShowPromptAsync(object content, string title)

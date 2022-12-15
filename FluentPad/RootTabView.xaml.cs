@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
@@ -65,14 +66,10 @@ namespace FluentPad
 
             foreach (TabViewItem item in tabView.TabItems.Cast<TabViewItem>())
             {
-                if (item.IconSource != null)
+                if (CommonUtils.CheckIfUnSaved(item))
                 {
-                    muxc.SymbolIconSource symbolIcon = item.IconSource as muxc.SymbolIconSource;
-                    if (symbolIcon.Symbol == Symbol.Edit)
-                    {
-                        flag = true;
-                        break;
-                    }
+                    flag = true;
+                    break;
                 }
             }
 
@@ -124,9 +121,9 @@ namespace FluentPad
             CustomDragRegion.Height = ShellTitlebarInset.Height = sender.Height;
         }
 
-        private void TabView_AddTabButtonClick(muxc.TabView sender, object args)
+        private void TabView_AddTabButtonClick(TabView sender, object args)
         {
-            var newTab = new muxc.TabViewItem
+            var newTab = new TabViewItem
             {
                 IconSource = new muxc.SymbolIconSource() { Symbol = Symbol.Document },
                 Header = "New Document"
@@ -139,9 +136,31 @@ namespace FluentPad
             tabView.SelectedIndex = tabView.TabItems.Count - 1;
         }
 
-        private void TabView_TabCloseRequested(muxc.TabView sender, muxc.TabViewTabCloseRequestedEventArgs args)
+        private async void HandleTabClose(TabViewItem tabViewItem)
         {
-            sender.TabItems.Remove(args.Tab);
+            bool flag = false;
+
+            if (CommonUtils.CheckIfUnSaved(tabViewItem))
+            {
+                if (await CommonUtils.ShowPromptAsync("File is not saved. Do you still want to close this file?", "Prompt"))
+                {
+                    flag = true;
+                }
+            }
+            else
+            {
+                flag = true;
+            }
+
+            if (flag)
+            {
+                tabView.TabItems.Remove(tabViewItem);
+            }
+        }
+
+        private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
+        {
+            HandleTabClose(args.Tab);
         }
     }
 }
