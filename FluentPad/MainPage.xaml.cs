@@ -83,9 +83,7 @@ namespace FluentPad
 
         private bool CheckIfUnSaved()
         {
-            TabViewItem tabViewItem = Frame.Parent as TabViewItem;
-
-            if (tabViewItem.IconSource == null)
+            if (!(Frame?.Parent is TabViewItem tabViewItem) || tabViewItem.IconSource == null)
             {
                 return false;
             }
@@ -170,13 +168,13 @@ namespace FluentPad
         {
             try
             {
-                if (e.Parameter is Windows.ApplicationModel.Activation.IActivatedEventArgs args)
+                if (e.Parameter != null && e.Parameter is Windows.ApplicationModel.Activation.IActivatedEventArgs args)
                 {
-                    if (args.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
+                    if (args?.Kind != null && args.Kind is Windows.ApplicationModel.Activation.ActivationKind.File)
                     {
-                        if (args is Windows.ApplicationModel.Activation.FileActivatedEventArgs fileArgs && fileArgs.Files.Count > 0)
+                        if (args is Windows.ApplicationModel.Activation.FileActivatedEventArgs fileArgs && fileArgs?.Files?.Count > 0)
                         {
-                            var file = (StorageFile)fileArgs.Files[0];
+                            var file = (StorageFile)fileArgs?.Files[0];
                             string strFilePath = file.Path;
 
                             if (!string.IsNullOrWhiteSpace(strFilePath))
@@ -191,7 +189,7 @@ namespace FluentPad
             }
             catch (Exception ex)
             {
-                CommonUtils.ShowDialog("Error: " + ex.Message, "ERROR");
+                CommonUtils.ShowDialog("Error: " + ex, "ERROR in MainPage");
             }
         }
 
@@ -250,10 +248,27 @@ namespace FluentPad
 
         private void ChangeTitle(string title)
         {
-            ApplicationView appView = ApplicationView.GetForCurrentView();
-            TabViewItem tabViewItem = Frame.Parent as TabViewItem;
-            appView.Title = title;
-            tabViewItem.Header = title;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(title))
+                {
+                    return;
+                }
+
+                ApplicationView appView = ApplicationView.GetForCurrentView();
+                if (appView != null && Frame?.Parent != null)
+                {
+                    TabViewItem tabViewItem = Frame.Parent as TabViewItem;
+                    if (tabViewItem != null)
+                    {
+                        appView.Title = title;
+                        tabViewItem.Header = title;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void FixAutoSelect() => textBoxMain.SelectionStart = 0;
@@ -522,7 +537,7 @@ namespace FluentPad
                 await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     Frame frame = new Frame();
-                    frame.Navigate(typeof(MainPage), null);
+                    frame.Navigate(typeof(RootTabView), null);
                     Window.Current.Content = frame;
                     Window.Current.Activate();
                     newViewId = ApplicationView.GetForCurrentView().Id;

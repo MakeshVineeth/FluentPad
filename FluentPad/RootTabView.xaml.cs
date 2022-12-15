@@ -1,6 +1,10 @@
-﻿using Windows.ApplicationModel.Core;
+﻿using System;
+using System.IO;
+using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
 
 
@@ -16,7 +20,47 @@ namespace FluentPad
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             Window.Current.SetTitleBar(CustomDragRegion);
-            TabView_AddTabButtonClick(tabView, null);
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            try
+            {
+                if (e.Parameter is Windows.ApplicationModel.Activation.IActivatedEventArgs args)
+                {
+                    if (args.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
+                    {
+                        if (args is Windows.ApplicationModel.Activation.FileActivatedEventArgs fileArgs && fileArgs.Files.Count > 0)
+                        {
+                            var file = (StorageFile)fileArgs.Files[0];
+                            string strFilePath = file.Path;
+
+                            if (!string.IsNullOrWhiteSpace(strFilePath))
+                            {
+                                var newTab = new muxc.TabViewItem
+                                {
+                                    IconSource = new muxc.SymbolIconSource() { Symbol = Symbol.Document },
+                                    Header = Path.GetFileName(strFilePath)
+                                };
+
+                                Frame frame = new Frame();
+                                newTab.Content = frame;
+                                frame.Navigate(typeof(MainPage), fileArgs);
+                                tabView.TabItems.Add(newTab);
+                                tabView.SelectedIndex = tabView.TabItems.Count - 1;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    TabView_AddTabButtonClick(tabView, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonUtils.ShowDialog("Error: " + ex.Message, "ERROR");
+            }
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
