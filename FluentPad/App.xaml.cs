@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -90,30 +88,18 @@ namespace FluentPad
 
         private void LoadContent(FileActivatedEventArgs args)
         {
-            Frame rootFrame = new Frame();
-            rootFrame.NavigationFailed += OnNavigationFailed;
-            Window.Current.Content = rootFrame;
-            rootFrame.Navigate(typeof(RootTabView), args);
-            Window.Current.Activate();
-        }
-
-        private void CheckUnsaved(FileActivatedEventArgs args)
-        {
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            if (view.Title.EndsWith(" *")) // TODO
+            if (!(Window.Current.Content is Frame rootFrame))
             {
-                _ = CommonUtils.ShowPromptAsync("File is not saved. Do you still want to close this file and open another file?", "Open new file?").ContinueWith((obj) =>
-                {
-                    if (obj.IsCompleted && obj.Result == true)
-                    {
-                        LoadContent(args);
-                    }
-                }, TaskScheduler.FromCurrentSynchronizationContext());
-
+                rootFrame = new Frame();
+                rootFrame.NavigationFailed += OnNavigationFailed;
+                Window.Current.Content = rootFrame;
+                rootFrame.Navigate(typeof(RootTabView), args);
+                Window.Current.Activate();
             }
             else
             {
-                LoadContent(args);
+                RootTabView rootTabView = (RootTabView)rootFrame.Content;
+                rootTabView?.HandleFileActivation(args);
             }
         }
 
@@ -121,7 +107,7 @@ namespace FluentPad
         {
             try
             {
-                CheckUnsaved(args);
+                LoadContent(args);
             }
             catch (Exception)
             {

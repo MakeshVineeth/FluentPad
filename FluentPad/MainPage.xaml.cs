@@ -68,17 +68,10 @@ namespace FluentPad
                 var root = (FrameworkElement)Window.Current.Content;
                 if (root != null)
                     root.RequestedTheme = ElementTheme.Dark;
-
-                SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += OnCloseRequest;
             }
             catch (Exception)
             {
             }
-        }
-
-        private void OnCloseRequest(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
-        {
-            OnCloseEvents(e);
         }
 
         private bool CheckIfUnSaved()
@@ -100,15 +93,6 @@ namespace FluentPad
             {
                 Symbol = Symbol.Document
             };
-        }
-
-        private void OnCloseEvents(SystemNavigationCloseRequestedPreviewEventArgs e)
-        {
-            if (CheckIfUnSaved())
-            {
-                e.Handled = true;
-                operations.CloseApplicationPrompt();
-            }
         }
 
         private void Listener_ThemeChanged(ThemeListener sender)

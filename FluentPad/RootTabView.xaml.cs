@@ -1,7 +1,11 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml.Controls;
+using System;
 using System.IO;
+using System.Linq;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Storage;
+using Windows.UI.Core.Preview;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -12,43 +16,84 @@ namespace FluentPad
 {
     public sealed partial class RootTabView : Page
     {
+        private readonly Operations operations;
+
         public RootTabView()
         {
             InitializeComponent();
+            operations = new Operations(null);
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             Window.Current.SetTitleBar(CustomDragRegion);
+            SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += OnCloseRequest;
+        }
+
+        public void HandleFileActivation(FileActivatedEventArgs fileArgs)
+        {
+            if (fileArgs.Files.Count > 0)
+            {
+                var file = (StorageFile)fileArgs.Files[0];
+                string strFilePath = file.Path;
+
+                if (!string.IsNullOrWhiteSpace(strFilePath))
+                {
+                    var newTab = new muxc.TabViewItem
+                    {
+                        IconSource = new muxc.SymbolIconSource() { Symbol = Symbol.Document },
+                        Header = Path.GetFileName(strFilePath)
+                    };
+
+                    Frame frame = new Frame();
+                    newTab.Content = frame;
+                    frame.Navigate(typeof(MainPage), fileArgs);
+                    tabView.TabItems.Add(newTab);
+                    tabView.SelectedIndex = tabView.TabItems.Count - 1;
+                }
+            }
+        }
+
+        private void OnCloseRequest(object sender, SystemNavigationCloseRequestedPreviewEventArgs e)
+        {
+            OnCloseEvents(e);
+        }
+
+        private void OnCloseEvents(SystemNavigationCloseRequestedPreviewEventArgs e)
+        {
+            bool flag = false;
+
+            foreach (TabViewItem item in tabView.TabItems.Cast<TabViewItem>())
+            {
+                if (item.IconSource != null)
+                {
+                    muxc.SymbolIconSource symbolIcon = item.IconSource as muxc.SymbolIconSource;
+                    if (symbolIcon.Symbol == Symbol.Edit)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+
+            if (flag)
+            {
+                e.Handled = true;
+                operations.CloseApplicationPrompt();
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             try
             {
-                if (e.Parameter is Windows.ApplicationModel.Activation.IActivatedEventArgs args)
+                if (e.Parameter is IActivatedEventArgs args)
                 {
-                    if (args.Kind == Windows.ApplicationModel.Activation.ActivationKind.File)
+                    if (args.Kind == ActivationKind.File)
                     {
-                        if (args is Windows.ApplicationModel.Activation.FileActivatedEventArgs fileArgs && fileArgs.Files.Count > 0)
+                        if (args is FileActivatedEventArgs fileArgs)
                         {
-                            var file = (StorageFile)fileArgs.Files[0];
-                            string strFilePath = file.Path;
-
-                            if (!string.IsNullOrWhiteSpace(strFilePath))
-                            {
-                                var newTab = new muxc.TabViewItem
-                                {
-                                    IconSource = new muxc.SymbolIconSource() { Symbol = Symbol.Document },
-                                    Header = Path.GetFileName(strFilePath)
-                                };
-
-                                Frame frame = new Frame();
-                                newTab.Content = frame;
-                                frame.Navigate(typeof(MainPage), fileArgs);
-                                tabView.TabItems.Add(newTab);
-                                tabView.SelectedIndex = tabView.TabItems.Count - 1;
-                            }
+                            HandleFileActivation(fileArgs);
                         }
                     }
                 }
